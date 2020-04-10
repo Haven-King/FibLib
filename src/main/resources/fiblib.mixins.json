@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.hephaestus.fiblib.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PacketFibber",
+    "BlockMixin",
+    "ServerPlayerEntityMixin",
+    "packets.BlockActionFibber",
+    "packets.BlockUpdateFibber",
+    "packets.PlayerActionFibber",
+    "packets.chunkdata.ArrayPaletteFibber",
+    "packets.chunkdata.BiMapPaletteFibber",
+    "packets.chunkdata.ChunkDataFibber",
+    "packets.chunkdata.ChunkDeltaFibber",
+    "packets.chunkdata.ChunkSectionFibber",
+    "packets.chunkdata.IdListPaletteFibber",
+    "packets.chunkdata.PalettedContainerFibber"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

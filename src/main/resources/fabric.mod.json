@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "fiblib",
+  "version": "${version}",
+
+  "name": "FibLib",
+  "description": "This is a serverside library for spoofing data to clients.",
+  "authors": [
+    "Haven King"
+  ],
+  "contact": {
+    "homepage": "https://hephaestus.dev/"
+  },
+
+  "license": "MIT",
+  "icon": "assets/fiblib/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+    ]
+  },
+  "mixins": [
+    "fiblib.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
