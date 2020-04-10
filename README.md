@@ -1,9 +1,9 @@
-# Fabric Example Mod
-
+# FibLib
+![https://raw.githubusercontent.com/Hephaestus-Dev/FibLib/master/src/main/resources/assets/fiblib/icon.png]
 ## Setup
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+For setup instructions please see the [FibLib wiki page]().
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+This mod is available under the MIT license.
