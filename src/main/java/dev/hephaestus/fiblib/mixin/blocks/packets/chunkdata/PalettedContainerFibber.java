@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import dev.hephaestus.fiblib.Fibber;
 import net.minecraft.server.network.ServerPlayerEntity;

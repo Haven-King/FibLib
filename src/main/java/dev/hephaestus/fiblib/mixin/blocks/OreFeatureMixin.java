@@ -1,7 +1,7 @@
-package dev.hephaestus.fiblib.mixin;
+package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
-import dev.hephaestus.fiblib.Tester;
+import dev.hephaestus.fiblib.blocks.Tester;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -22,7 +22,7 @@ public class OreFeatureMixin {
     public void registerOre(IWorld world, Random random, OreFeatureConfig config, double startX, double endX, double startZ, double endZ, double startY, double endY, int x, int y, int z, int size, int i, CallbackInfoReturnable<Boolean> cir, int j, BitSet bitSet, BlockPos.Mutable mutable) {
         if (Tester.DEBUG) {
             if (world.getWorld() instanceof ServerWorld) {
-                FibLib.put(config.state.getBlock(), new BlockPos(mutable));
+                FibLib.Blocks.put(config.state.getBlock(), new BlockPos(mutable));
             }
         }
     }

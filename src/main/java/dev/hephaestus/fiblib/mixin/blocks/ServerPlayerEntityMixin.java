@@ -1,8 +1,8 @@
-package dev.hephaestus.fiblib.mixin;
+package dev.hephaestus.fiblib.mixin.blocks;
 
 import com.mojang.authlib.GameProfile;
 import dev.hephaestus.fiblib.FibLib;
-import dev.hephaestus.fiblib.Tester;
+import dev.hephaestus.fiblib.blocks.Tester;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -21,11 +21,11 @@ public class ServerPlayerEntityMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void updateThings(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
-        FibLib.update(world);
+        FibLib.Blocks.update(world);
     }
 
     @Inject(method = "setGameMode", at = @At("TAIL"))
     public void setGamemodeInjection(GameMode gameMode, CallbackInfo ci) {
-        if (Tester.DEBUG) FibLib.update(this.getServerWorld());
+        if (Tester.DEBUG) FibLib.Blocks.update(this.getServerWorld());
     }
 }

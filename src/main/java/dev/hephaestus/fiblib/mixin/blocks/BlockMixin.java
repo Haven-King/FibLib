@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin;
+package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
 import net.minecraft.block.Block;
@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockMixin {
     @Inject(method = "onBlockRemoved", at = @At("HEAD"))
     public void removalInjection(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved, CallbackInfo ci) {
-        if (world instanceof ServerWorld) FibLib.remove((ServerWorld)world, pos);
+        if (world instanceof ServerWorld) FibLib.Blocks.remove((ServerWorld)world, pos);
     }
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"))
     public void addedInjection(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved, CallbackInfo ci) {
-        if (world instanceof ServerWorld) FibLib.put(state.getBlock(), pos);
+        if (world instanceof ServerWorld) FibLib.Blocks.put(state.getBlock(), pos);
     }
 }

@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets;
+package dev.hephaestus.fiblib.mixin.blocks.packets;
 
 import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.Fibber;
@@ -14,7 +14,7 @@ public class PlayerActionFibber implements Fibber {
     @Shadow private BlockState state;
     @Shadow private BlockPos pos;
     public void fix(ServerPlayerEntity player) {
-        FibLib.put(state.getBlock(), pos); // We want to start tracking this block if we haven't already
-        this.state = FibLib.get(state, player);
+        FibLib.Blocks.put(state.getBlock(), pos); // We want to start tracking this block if we haven't already
+        this.state = FibLib.Blocks.get(state, player);
     }
 }

@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.Fibber;
@@ -22,7 +22,7 @@ public class ChunkDeltaFibber implements Fibber {
             stateField.setAccessible(true);
             for (ChunkDeltaUpdateS2CPacket.ChunkDeltaRecord record : this.records) {
                 BlockState before = record.getState();
-                stateField.set(record, FibLib.get(before, player));
+                stateField.set(record, FibLib.Blocks.get(before, player));
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();

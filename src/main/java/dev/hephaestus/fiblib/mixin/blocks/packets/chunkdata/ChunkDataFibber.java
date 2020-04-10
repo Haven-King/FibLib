@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import dev.hephaestus.fiblib.Fibber;
 import io.netty.buffer.ByteBuf;

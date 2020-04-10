@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin;
+package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.Fibber;
 import io.netty.util.concurrent.Future;

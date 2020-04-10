@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.hephaestus.fiblib.Tester"
+      "dev.hephaestus.fiblib.blocks.Tester"
     ]
   },
   "mixins": [
@@ -30,7 +30,7 @@
     "fabric": "*",
     "minecraft": "1.15.x"
   },
-  "suggests": {
-    "flamingo": "*"
+  "custom": {
+    "modmenu:api": true
   }
 }

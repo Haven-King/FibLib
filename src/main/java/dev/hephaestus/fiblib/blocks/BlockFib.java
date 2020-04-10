@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib;
+package dev.hephaestus.fiblib.blocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;

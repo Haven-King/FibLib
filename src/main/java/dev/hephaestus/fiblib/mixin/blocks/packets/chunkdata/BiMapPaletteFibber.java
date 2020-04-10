@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.Fibber;
@@ -18,7 +18,7 @@ public class BiMapPaletteFibber<T> implements Fibber {
     ServerPlayerEntity player;
     @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
     public int toPacketRedir(IdList<T> idList, T object) {
-        return idList.getId((T) FibLib.get((BlockState) object, this.player));
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
     }
 
     @Override

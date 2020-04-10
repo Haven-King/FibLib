@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin;
+package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
 import net.minecraft.server.MinecraftServer;
@@ -19,6 +19,6 @@ import java.util.concurrent.Executor;
 public class ServerWorldMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     public void initializeFibbers(MinecraftServer server, Executor workerExecutor, WorldSaveHandler worldSaveHandler, LevelProperties properties, DimensionType dimensionType, Profiler profiler, WorldGenerationProgressListener worldGenerationProgressListener, CallbackInfo ci) {
-        FibLib.registerPreloadedFibs((ServerWorld)(Object)this);
+        FibLib.Blocks.registerPreloadedFibs((ServerWorld)(Object)this);
     }
 }
