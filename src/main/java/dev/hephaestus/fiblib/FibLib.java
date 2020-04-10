@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class FibLib extends PersistentState {
 			}
 		}
 
-		if (i > 0) FibLib.log("Registered %d pre-loaded BlockFib %s", i, i == 1 ? "" : "s");
+		if (i > 0) FibLib.log("Registered %d pre-loaded BlockFib%s", i, i == 1 ? "" : "s");
 	}
 
 	@Override
@@ -126,11 +127,47 @@ public class FibLib extends PersistentState {
 
 	// Updates all blocks being fibbed of a certain type. Use this when possible.
 	public static void update(ServerWorld world, Block block) {
-		int i = 0;
-		for (Long l : FibLib.getInstance(world).blocks.get(block)) {
-			world.getChunkManager().markForUpdate(BlockPos.fromLong(l));
-			++i;
+		FibLib instance = FibLib.getInstance(world);
+		if (instance.blocks.containsKey(block)) {
+			int i = 0;
+			for (Long l : instance.blocks.get(block)) {
+				world.getChunkManager().markForUpdate(BlockPos.fromLong(l));
+				++i;
+			}
+			FibLib.log("Updated %d blocks", i);
 		}
+	}
+
+	// Updates all blocks being fibbed that are in a list of types. Convenience.
+	public static void update(ServerWorld world, Block... blocks) {
+		FibLib instance = FibLib.getInstance(world);
+
+		int i = 0;
+		for (Block a : blocks) {
+			if (instance.blocks.containsKey(a)) {
+				for (Long l : instance.blocks.get(a)) {
+					world.getChunkManager().markForUpdate(BlockPos.fromLong(l));
+					++i;
+				}
+			}
+		}
+
+		FibLib.log("Updated %d blocks", i);
+	}
+
+	public static void update(ServerWorld world, Collection<Block> blocks) {
+		FibLib instance = FibLib.getInstance(world);
+
+		int i = 0;
+		for (Block a : blocks) {
+			if (instance.blocks.containsKey(a)) {
+				for (Long l : instance.blocks.get(a)) {
+					world.getChunkManager().markForUpdate(BlockPos.fromLong(l));
+					++i;
+				}
+			}
+		}
+
 		FibLib.log("Updated %d blocks", i);
 	}
 
