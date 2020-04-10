@@ -22,7 +22,7 @@ public class OreFeatureMixin {
     public void registerOre(IWorld world, Random random, OreFeatureConfig config, double startX, double endX, double startZ, double endZ, double startY, double endY, int x, int y, int z, int size, int i, CallbackInfoReturnable<Boolean> cir, int j, BitSet bitSet, BlockPos.Mutable mutable) {
         if (Tester.DEBUG) {
             if (world.getWorld() instanceof ServerWorld) {
-                FibLib.Blocks.put(config.state.getBlock(), new BlockPos(mutable));
+                FibLib.Blocks.track(world.getDimension().getType(), config.state.getBlock(), new BlockPos(mutable));
             }
         }
     }

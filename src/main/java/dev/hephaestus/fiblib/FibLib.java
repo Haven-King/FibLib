@@ -42,7 +42,7 @@ public class FibLib {
 		private static final HashMap<DimensionType, ArrayList<Pair<Block, BlockFib>>> PRE_LOAD = new HashMap<>();
 		private static final HashSet<Block> ALL_FIB_BLOCKS = new HashSet<>();
 
-		private static final Stack<Pair<Block, BlockPos>> PENDING_OVERWORLD_BLOCKS = new Stack<>();
+		private static final HashMap<DimensionType, Stack<Pair<Block, BlockPos>>> PENDING_BLOCKS = new HashMap<>();
 
 		private final HashMap<Block, LongSet> blocks = new HashMap<>();
 		private final HashMap<Block, BlockFib> fibs = new HashMap<>();
@@ -60,11 +60,14 @@ public class FibLib {
 			);
 
 			int i = 0;
-			while (!PENDING_OVERWORLD_BLOCKS.isEmpty()) {
-				Pair<Block, BlockPos> pair = PENDING_OVERWORLD_BLOCKS.pop();
-				instance.putWithInstance(pair.getLeft(), pair.getRight());
-				world.getChunkManager().markForUpdate(pair.getRight());
-				i++;
+			if (PENDING_BLOCKS.containsKey(world.getDimension().getType())) {
+				Stack<Pair<Block, BlockPos>> stack = PENDING_BLOCKS.get(world.getDimension().getType());
+				while (!stack.isEmpty()) {
+					Pair<Block, BlockPos> pair = stack.pop();
+					instance.putWithInstance(pair.getLeft(), pair.getRight());
+					world.getChunkManager().markForUpdate(pair.getRight());
+					i++;
+				}
 			}
 
 			if (i > 0) {
@@ -271,12 +274,11 @@ public class FibLib {
 		/**
 		 * Begins tracking a block for updates. Any time a Fibber that applies to this block checks its conditions, it will
 		 * be against this entry. Automatically called on block add,see dev.hephaestus.fiblib.mixin.BlockMixin
-		 *
 		 * @param world the world that this block is in
 		 * @param block the block we care about. used for selective updating
 		 * @param pos   the position of the block we are going to keep track of
 		 */
-		public static void put(ServerWorld world, Block block, BlockPos pos) {
+		public static void track(ServerWorld world, Block block, BlockPos pos) {
 			FibLib.Blocks.getInstance(world).putWithInstance(block, pos);
 		}
 
@@ -285,23 +287,30 @@ public class FibLib {
 		 * @param state the block state we care about; note that only the actual Block is used, state info is disregarded
 		 * @param pos   the position of the block we are going to keep track of
 		 */
-		public static void put(ServerWorld world, BlockState state, BlockPos pos) {
-			FibLib.Blocks.put(world, state.getBlock(), pos);
+		public static void track(ServerWorld world, BlockState state, BlockPos pos) {
+			FibLib.Blocks.track(world, state.getBlock(), pos);
 		}
 
 		/**
-		 * This method is awful. If you use it, you are bad and should feel bad. This method is so awful, it has a body
-		 * count higher than I am legally allowed to write here. If it was any *more* awful, it would probably have been
-		 * elected the 45th President of the United States. That being said, it totally works, even if it makes me cry.
-		 *
+		 * This method allows you to register a block to be watched before the world it's in is finished being built.
+		 * This is useful for registering blocks to be tracked during worldgen.
 		 * @param block the block we care about. used for selective updating
 		 * @param pos   the position of the block we are going to keep track of
 		 */
-		public static void put(Block block, BlockPos pos) {
+		public static void track(DimensionType dimension, Block block, BlockPos pos) {
 			if (ALL_FIB_BLOCKS.contains(block)) {
-				PENDING_OVERWORLD_BLOCKS.add(new Pair<>(block, pos));
+				PENDING_BLOCKS.putIfAbsent(dimension, new Stack<>());
+				PENDING_BLOCKS.get(dimension).add(new Pair<>(block, pos));
 			}
 		}
+
+		public static void track(DimensionType dimension, BlockState state, BlockPos pos) {
+			if (ALL_FIB_BLOCKS.contains(state.getBlock())) {
+				PENDING_BLOCKS.putIfAbsent(dimension, new Stack<>());
+				PENDING_BLOCKS.get(dimension).add(new Pair<>(state.getBlock(), pos));
+			}
+		}
+
 
 
 		/**
@@ -310,7 +319,7 @@ public class FibLib {
 		 * @param world the world that this block is in
 		 * @param pos   the position of the block we are going to keep track of
 		 */
-		public static void remove(ServerWorld world, BlockPos pos) {
+		public static void stopTracking(ServerWorld world, BlockPos pos) {
 			FibLib.Blocks.getInstance(world).removeWithInstance(world, pos);
 		}
 	}
