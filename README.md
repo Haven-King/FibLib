@@ -1,5 +1,6 @@
+![banner](https://raw.githubusercontent.com/Hephaestus-Dev/FibLib/master/banner.png "banner")
 # FibLib
-![logo](https://raw.githubusercontent.com/Hephaestus-Dev/FibLib/master/icon.png "logo")
+
 ## Setup
 For setup instructions please see the [FibLib wiki](https://github.com/Hephaestus-Dev/FibLib/wiki).
 
