@@ -20,6 +20,6 @@ public class BlockMixin {
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"))
     public void addedInjection(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved, CallbackInfo ci) {
-        if (world instanceof ServerWorld) FibLib.put((ServerWorld)world, pos);
+        if (world instanceof ServerWorld) FibLib.put(state.getBlock(), pos);
     }
 }
