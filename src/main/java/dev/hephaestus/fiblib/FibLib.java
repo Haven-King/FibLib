@@ -104,6 +104,15 @@ public class FibLib extends PersistentState {
 		FibLib.log("Updated %d blocks", i);
 	}
 
+	public static void update(ServerWorld world, Block block) {
+		int i = 0;
+		for (Long l : FibLib.getInstance(world).blocks.get(block)) {
+			world.getChunkManager().markForUpdate(BlockPos.fromLong(l));
+			++i;
+		}
+		FibLib.log("Updated %d blocks", i);
+	}
+
 	public static void register(ServerWorld world, Block block, BlockFib fib) {
 		FibLib.getInstance(world).fibs.put(block, fib);
 	}
