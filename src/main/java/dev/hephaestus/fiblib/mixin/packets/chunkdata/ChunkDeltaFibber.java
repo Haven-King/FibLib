@@ -2,7 +2,6 @@ package dev.hephaestus.fiblib.mixin.packets.chunkdata;
 
 import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.Fibber;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;

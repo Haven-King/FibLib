@@ -18,6 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+      "dev.hephaestus.fiblib.Tester"
     ]
   },
   "mixins": [

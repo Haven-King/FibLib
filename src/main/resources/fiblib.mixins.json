@@ -6,6 +6,7 @@
   "mixins": [
     "PacketFibber",
     "BlockMixin",
+    "ServerWorldMixin",
     "ServerPlayerEntityMixin",
     "packets.BlockActionFibber",
     "packets.BlockUpdateFibber",

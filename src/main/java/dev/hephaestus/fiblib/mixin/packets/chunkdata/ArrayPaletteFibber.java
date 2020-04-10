@@ -5,7 +5,6 @@ import dev.hephaestus.fiblib.Fibber;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.IdList;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.chunk.ArrayPalette;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
