@@ -9,7 +9,7 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.Stack;
 
 public class Tester implements ModInitializer {
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     public Stack<Block> blocksToFib = new Stack<>();
 
     @Override
