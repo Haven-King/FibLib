@@ -254,7 +254,7 @@ public class FibLib {
 		}
 
 		/**
-		 * A convenience function so that we can get get() without an instance.
+		 * A convenience function so that we can get() without an instance.
 		 *
 		 * @param state  the state of the block we're inquiring about. Note that because this is passed to a BlockFib, other
 		 *               aspects of the state than the Block may be used in determining the output
