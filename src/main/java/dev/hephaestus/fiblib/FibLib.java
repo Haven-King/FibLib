@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import dev.hephaestus.fiblib.blocks.BlockFib;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
@@ -29,11 +30,19 @@ public class FibLib {
 	private static final String SAVE_KEY = "fiblib";
 
 	static void log(String msg) {
-		LOGGER.info(String.format("[%s] %s", MOD_NAME, msg));
+		LOGGER.info("%s", msg);
 	}
 
 	static void log(String format, Object... args) {
 		LOGGER.info(String.format("[%s] %s", MOD_NAME, String.format(format, args)));
+	}
+
+	static void debug(String msg) {
+		debug("%s", msg);
+	}
+
+	static void debug(String format, Object... args) {
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) LOGGER.info(String.format("[%s] %s", MOD_NAME, String.format(format, args)));
 	}
 
 	public static class Blocks extends PersistentState {
@@ -70,9 +79,9 @@ public class FibLib {
 				}
 			}
 
-			if (i > 0) {
-				FibLib.log("Registered %d pre-loaded Block%s", i, i == 1 ? "" : "s");
-			}
+//			if (i > 0) {
+//				FibLib.debug("Registered %d pre-loaded Block%s", i, i == 1 ? "" : "s");
+//			}
 
 			return instance;
 		}
@@ -97,7 +106,7 @@ public class FibLib {
 				}
 			}
 
-			if (i > 0) FibLib.log("Registered %d pre-loaded BlockFib%s", i, i == 1 ? "" : "s");
+			if (i > 0) FibLib.debug("Registered %d pre-loaded BlockFib%s", i, i == 1 ? "" : "s");
 		}
 
 		@Internal
