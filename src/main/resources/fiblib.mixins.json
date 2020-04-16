@@ -8,7 +8,6 @@
     "blocks.OreFeatureMixin",
     "blocks.PacketFibber",
     "blocks.ServerPlayerEntityMixin",
-    "blocks.ServerWorldMixin",
     "blocks.packets.BlockActionFibber",
     "blocks.packets.BlockUpdateFibber",
     "blocks.packets.PlayerActionFibber",

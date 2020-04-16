@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.hephaestus.fiblib.blocks.Tester"
+      "dev.hephaestus.fiblib.FibLib"
     ]
   },
   "mixins": [
