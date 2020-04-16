@@ -22,7 +22,7 @@ public abstract class PacketFibber {
 
     @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
     public void fixPackets(Packet<?> packet, CallbackInfo ci) {
-        if (packet instanceof BlockActionS2CPacket || packet instanceof PlayerActionResponseS2CPacket || packet instanceof BlockUpdateS2CPacket || packet instanceof ChunkDeltaUpdateS2CPacket || packet instanceof ChunkDataS2CPacket) {
+        if (packet instanceof BlockActionS2CPacket || packet instanceof PlayerActionResponseS2CPacket || packet instanceof BlockUpdateS2CPacket || packet instanceof ChunkDeltaUpdateS2CPacket) {
             Fibber.fix(packet, player);
             this.sendPacket(packet, null);
             ci.cancel();

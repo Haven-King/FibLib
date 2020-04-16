@@ -9,12 +9,11 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.Stack;
 
 public class Tester implements ModInitializer {
-    public static boolean DEBUG = false;
     public Stack<Block> blocksToFib = new Stack<>();
 
     @Override
     public void onInitialize() {
-        if (DEBUG) {
+        if (FibLib.DEBUG) {
             blocksToFib.add(Blocks.COAL_ORE);
             blocksToFib.add(Blocks.REDSTONE_ORE);
             blocksToFib.add(Blocks.IRON_ORE);
@@ -27,7 +26,7 @@ public class Tester implements ModInitializer {
                 FibLib.Blocks.register(DimensionType.OVERWORLD, blocksToFib.pop(), (state, player) ->
                         player.isCreative() ?
                                 state :
-                                Blocks.STONE.getDefaultState()
+                                Blocks.GLOWSTONE.getDefaultState()
                 );
             }
         }

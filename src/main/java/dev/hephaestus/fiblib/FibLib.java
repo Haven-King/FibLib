@@ -28,9 +28,10 @@ public class FibLib {
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final String SAVE_KEY = "fiblib";
+    public static boolean DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
 
-	static void log(String msg) {
-		LOGGER.info("%s", msg);
+    static void log(String msg) {
+		log("%s", msg);
 	}
 
 	static void log(String format, Object... args) {
@@ -42,7 +43,7 @@ public class FibLib {
 	}
 
 	static void debug(String format, Object... args) {
-		if (FabricLoader.getInstance().isDevelopmentEnvironment()) LOGGER.info(String.format("[%s] %s", MOD_NAME, String.format(format, args)));
+		if (DEBUG) LOGGER.info(String.format("[%s] %s", MOD_NAME, String.format(format, args)));
 	}
 
 	public static class Blocks extends PersistentState {
@@ -55,6 +56,8 @@ public class FibLib {
 
 		private final HashMap<Block, LongSet> blocks = new HashMap<>();
 		private final HashMap<Block, BlockFib> fibs = new HashMap<>();
+
+		private final HashMap<UUID, HashMap<BlockState, BlockState>> lookups = new HashMap<>();
 
 		// Construction methods
 		private Blocks(ServerWorld world) {
@@ -146,7 +149,12 @@ public class FibLib {
 		}
 
 		private BlockState getWithInstance(BlockState state, ServerPlayerEntity player) {
-			return fibs.getOrDefault(state.getBlock(), BlockFib.DEFAULT).get(state, player);
+			lookups.putIfAbsent(player.getUuid(), new HashMap<>());
+
+			if (!lookups.get(player.getUuid()).containsKey(state))
+				lookups.get(player.getUuid()).put(state, fibs.getOrDefault(state.getBlock(), BlockFib.DEFAULT).get(state, player));
+
+			return lookups.get(player.getUuid()).get(state);
 		}
 
 		private void removeWithInstance(ServerWorld world, BlockPos pos) {
@@ -163,6 +171,9 @@ public class FibLib {
 		 * @param world the world to update in
 		 */
 		public static void update(ServerWorld world) {
+			FibLib.Blocks instance = FibLib.Blocks.getInstance(world);
+			instance.lookups.clear();
+
 			int i = 0;
 			for (Long l : Iterables.concat(FibLib.Blocks.getInstance(world).blocks.values())) {
 				world.getChunkManager().markForUpdate(BlockPos.fromLong(l));
@@ -179,6 +190,8 @@ public class FibLib {
 		 */
 		public static void update(ServerWorld world, Block block) {
 			FibLib.Blocks instance = FibLib.Blocks.getInstance(world);
+			instance.lookups.clear();
+
 			if (instance.blocks.containsKey(block)) {
 				int i = 0;
 				for (Long l : instance.blocks.get(block)) {
@@ -197,6 +210,7 @@ public class FibLib {
 		 */
 		public static void update(ServerWorld world, Block... blocks) {
 			FibLib.Blocks instance = FibLib.Blocks.getInstance(world);
+			instance.lookups.clear();
 
 			int i = 0;
 			for (Block a : blocks) {
@@ -219,6 +233,7 @@ public class FibLib {
 		 */
 		public static void update(ServerWorld world, Collection<Block> blocks) {
 			FibLib.Blocks instance = FibLib.Blocks.getInstance(world);
+			instance.lookups.clear();
 
 			int i = 0;
 			for (Block a : blocks) {
@@ -272,11 +287,7 @@ public class FibLib {
 		 */
 		@Internal
 		public static BlockState get(BlockState state, ServerPlayerEntity player) {
-			try {
-				return FibLib.Blocks.getInstance(player).getWithInstance(state, player);
-			} catch (NullPointerException e) {
-				return state;
-			}
+			return player == null ? state : FibLib.Blocks.getInstance(player).getWithInstance(state, player);
 		}
 
 

@@ -2,7 +2,8 @@ package dev.hephaestus.fiblib.mixin.blocks;
 
 import com.mojang.authlib.GameProfile;
 import dev.hephaestus.fiblib.FibLib;
-import dev.hephaestus.fiblib.blocks.Tester;
+import io.github.ladysnake.pal.Pal;
+import io.github.ladysnake.pal.VanillaAbilities;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -22,10 +23,13 @@ public class ServerPlayerEntityMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     public void updateThings(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
         FibLib.Blocks.update(world);
+        if (FibLib.DEBUG) {
+            Pal.getAbilitySource(FibLib.MOD_ID, "debug_flight").grantTo((ServerPlayerEntity)(Object)this, VanillaAbilities.ALLOW_FLYING);
+        }
     }
 
     @Inject(method = "setGameMode", at = @At("TAIL"))
     public void setGamemodeInjection(GameMode gameMode, CallbackInfo ci) {
-        if (Tester.DEBUG) FibLib.Blocks.update(this.getServerWorld());
+        if (FibLib.DEBUG) FibLib.Blocks.update(this.getServerWorld());
     }
 }

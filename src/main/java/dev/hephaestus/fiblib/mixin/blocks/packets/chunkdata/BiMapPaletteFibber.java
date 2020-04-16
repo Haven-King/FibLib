@@ -21,6 +21,12 @@ public class BiMapPaletteFibber<T> implements Fibber {
         return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
     }
 
+    @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
+    public int packetSizeRedir(IdList<T> idList, T object) {
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
+    }
+
+
     @Override
     public void fix(ServerPlayerEntity player) {
         this.player = player;
