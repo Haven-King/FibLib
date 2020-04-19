@@ -21,16 +21,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 // Again, thanks LibCD
-public class FibberLoader implements SimpleResourceReloadListener {
-    public static final Map<Block, BlockFib> FIBS = new HashMap<>();
+public class FibScriptLoader implements SimpleResourceReloadListener {
+    public static final Map<BlockState, ScriptedBlockFib> FIBS = new HashMap<>();
     public static final ScriptEngineManager SCRIPT_MANAGER = new ScriptEngineManager();
 
     @Override
     public CompletableFuture load(ResourceManager resourceManager, Profiler profiler, Executor executor) {
-        FibLib.log("Are you even TRYING?");
         return CompletableFuture.supplyAsync(() -> {
-            FibLib.log("We tryin, boss...");
-            FibLib.Blocks.clearFibs();
             Collection<Identifier> resources = resourceManager.findResources("fibbers", name -> true);
             for (Identifier file: resources) {
                 int localPath = file.getPath().indexOf('/') + 1;
@@ -44,14 +41,14 @@ public class FibberLoader implements SimpleResourceReloadListener {
                         FibLib.log("Engine for fibber not found: %s", script.toString());
                         continue;
                     }
-                    BlockFib bridge = new BlockFib(engine, scriptText, script);
-                    FIBS.put(bridge.input().getBlock(), bridge);
+                    ScriptedBlockFib bridge = new ScriptedBlockFib(engine, scriptText, script);
+                    FIBS.put(bridge.input(), bridge);
                 } catch (IOException e) {
                     FibLib.log("Couldn't access file %s: ", file.toString(), e.getMessage());
                 }
             }
 
-            FibLib.log("Loaded %d scripts", FibLib.Blocks.numberOfFibs());
+            FibLib.log("Loaded %d scripts", FIBS.size());
 
             return FIBS;
         });
@@ -60,7 +57,10 @@ public class FibberLoader implements SimpleResourceReloadListener {
     @Override
     public CompletableFuture<Void> apply(Object o, ResourceManager resourceManager, Profiler profiler, Executor executor) {
         return CompletableFuture.runAsync(() -> {
-            FibLib.log("We applyin, boss...");
+            for (Map.Entry<BlockState, ScriptedBlockFib> e : FIBS.entrySet()) {
+                FibLib.Blocks.register(e.getKey(), e.getValue());
+                FibLib.Blocks.update();
+            }
         });
     }
 

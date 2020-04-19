@@ -4,11 +4,13 @@ import com.mojang.authlib.GameProfile;
 import dev.hephaestus.fiblib.FibLib;
 import io.github.ladysnake.pal.Pal;
 import io.github.ladysnake.pal.VanillaAbilities;
+import net.minecraft.block.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,14 +24,19 @@ public class ServerPlayerEntityMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void updateThings(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
-        FibLib.Blocks.update(world);
+        FibLib.Blocks.update();
         if (FibLib.DEBUG) {
             Pal.getAbilitySource(FibLib.MOD_ID, "debug_flight").grantTo((ServerPlayerEntity)(Object)this, VanillaAbilities.ALLOW_FLYING);
         }
     }
 
-    @Inject(method = "setGameMode", at = @At("TAIL"))
-    public void setGamemodeInjection(GameMode gameMode, CallbackInfo ci) {
-        if (FibLib.DEBUG) FibLib.Blocks.update(this.getServerWorld());
+    @Inject(method = "tick", at = @At("TAIL"))
+    public void fuckMyShitUp(CallbackInfo ci) {
+        if (FibLib.DEBUG) FibLib.Blocks.update();
     }
+
+//    @Inject(method = "setGameMode", at = @At("TAIL"))
+//    public void setGamemodeInjection(GameMode gameMode, CallbackInfo ci) {
+//        if (FibLib.DEBUG) FibLib.Blocks.update(DimensionType.OVERWORLD, Blocks.IRON_ORE.getDefaultState(), Blocks.COAL_ORE.getDefaultState());
+//    }
 }

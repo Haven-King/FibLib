@@ -20,7 +20,7 @@ public class ChunkHolderFibber {
     @Shadow private int sectionsNeedingUpdateMask;
 
     @Inject(method = "flushUpdates", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ChunkHolder;sendPacketToPlayersWatching(Lnet/minecraft/network/Packet;Z)V", ordinal = 3), cancellable = true)
-    public void fukkit(WorldChunk worldChunk, CallbackInfo ci) {
+    public void flushMyThings(WorldChunk worldChunk, CallbackInfo ci) {
         this.playersWatchingChunkProvider.getPlayersWatchingChunk(this.pos, false).forEach((serverPlayerEntity) -> {
             ChunkDataS2CPacket packet = new ChunkDataS2CPacket();
             ChunkDataFibber.fix(packet).fix(worldChunk, this.sectionsNeedingUpdateMask, serverPlayerEntity);
