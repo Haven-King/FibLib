@@ -4,9 +4,10 @@
   "package": "dev.hephaestus.fiblib.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "blocks.BlockMixin",
-    "blocks.OreFeatureMixin",
+    "blocks.ChunkSerializerMixin",
     "blocks.PacketFibber",
+    "blocks.ProtoChunkMixin",
+    "blocks.ServerChunkManagerMixin",
     "blocks.ServerPlayerEntityMixin",
     "blocks.WorldChunkMixin",
     "blocks.packets.BlockActionFibber",

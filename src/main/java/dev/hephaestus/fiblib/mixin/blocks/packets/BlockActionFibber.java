@@ -15,7 +15,6 @@ public class BlockActionFibber<T> implements Fibber {
     @Shadow private BlockPos pos;
     @Override
     public void fix(ServerPlayerEntity player) {
-        FibLib.Blocks.track(player.getServerWorld(), block.getDefaultState(), pos); // We want to start tracking this block if we haven't already
         this.block = FibLib.Blocks.get(block.getDefaultState(), player).getBlock();
     }
 }

@@ -24,19 +24,8 @@ public class ServerPlayerEntityMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void updateThings(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
-        FibLib.Blocks.update();
         if (FibLib.DEBUG) {
             Pal.getAbilitySource(FibLib.MOD_ID, "debug_flight").grantTo((ServerPlayerEntity)(Object)this, VanillaAbilities.ALLOW_FLYING);
         }
     }
-
-    @Inject(method = "tick", at = @At("TAIL"))
-    public void fuckMyShitUp(CallbackInfo ci) {
-        if (FibLib.DEBUG) FibLib.Blocks.update();
-    }
-
-//    @Inject(method = "setGameMode", at = @At("TAIL"))
-//    public void setGamemodeInjection(GameMode gameMode, CallbackInfo ci) {
-//        if (FibLib.DEBUG) FibLib.Blocks.update(DimensionType.OVERWORLD, Blocks.IRON_ORE.getDefaultState(), Blocks.COAL_ORE.getDefaultState());
-//    }
 }

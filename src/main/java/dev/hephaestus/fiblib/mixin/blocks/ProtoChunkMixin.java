@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.chunk.ProtoChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Mixin(WorldChunk.class)
-public class WorldChunkMixin implements ChunkTracker {
+@Mixin(ProtoChunk.class)
+public class ProtoChunkMixin implements ChunkTracker {
     private final HashMap<Integer, LongSet> trackedBlocks = new HashMap<>();
 
     @Inject(method = "setBlockState", at = @At("HEAD"))

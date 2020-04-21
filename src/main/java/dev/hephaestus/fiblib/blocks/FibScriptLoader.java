@@ -59,7 +59,6 @@ public class FibScriptLoader implements SimpleResourceReloadListener {
         return CompletableFuture.runAsync(() -> {
             for (Map.Entry<BlockState, ScriptedBlockFib> e : FIBS.entrySet()) {
                 FibLib.Blocks.register(e.getKey(), e.getValue());
-                FibLib.Blocks.update();
             }
         });
     }

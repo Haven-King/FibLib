@@ -16,7 +16,6 @@ public class BlockUpdateFibber implements Fibber {
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        FibLib.Blocks.track(player.getServerWorld(), state, pos); // We want to start tracking this block if we haven't already
         this.state = FibLib.Blocks.get(state, player);
     }
 }
