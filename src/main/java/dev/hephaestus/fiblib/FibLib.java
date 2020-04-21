@@ -65,9 +65,14 @@ public class FibLib implements ModInitializer {
 	}
 
 	public static class Blocks implements Tickable {
-		private static final CompositeMap<BlockPos> BLOCKS = new CompositeMap<>(DimensionType.class, ChunkPos.class, BlockState.class);
-		private static final CompositeMap<BlockState> LOOKUPS = new CompositeMap<>(BlockState.class, ServerPlayerEntity.class);
-		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>();
+		private static final HashMap<DimensionType, Blocks> INSTANCES = new HashMap<>(); // Will be used to track instances
+		private static final CompositeMap<BlockPos> BLOCKS = new CompositeMap<>(DimensionType.class, ChunkPos.class, BlockState.class); // Should not be static
+		private static final CompositeMap<BlockState> LOOKUPS = new CompositeMap<>(BlockState.class, ServerPlayerEntity.class); // Should stay static
+		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>(); // Should stay static
+
+		public Blocks getInstance(DimensionType dimensionType) {
+			return INSTANCES.get(dimensionType);
+		}
 
 		@Override
 		public void tick() {
