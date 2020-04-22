@@ -12,11 +12,9 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(BlockUpdateS2CPacket.class)
 public class BlockUpdateFibber implements Fibber {
     @Shadow private BlockState state;
-    @Shadow private BlockPos pos;
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        FibLib.Blocks.track(player.getServerWorld(), state, pos); // We want to start tracking this block if we haven't already
         this.state = FibLib.Blocks.get(state, player);
     }
 }

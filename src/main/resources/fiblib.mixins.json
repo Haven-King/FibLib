@@ -4,11 +4,14 @@
   "package": "dev.hephaestus.fiblib.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "blocks.BlockMixin",
-    "blocks.OreFeatureMixin",
+    "blocks.ChunkSerializerMixin",
     "blocks.PacketFibber",
+    "blocks.ProtoChunkMixin",
+    "blocks.ReadOnlyChunkMixin",
+    "blocks.ServerChunkManagerMixin",
     "blocks.ServerPlayerEntityMixin",
     "blocks.ServerWorldMixin",
+    "blocks.WorldChunkMixin",
     "blocks.packets.BlockActionFibber",
     "blocks.packets.BlockUpdateFibber",
     "blocks.packets.PlayerActionFibber",
@@ -19,7 +22,8 @@
     "blocks.packets.chunkdata.ChunkHolderFibber",
     "blocks.packets.chunkdata.ChunkSectionFibber",
     "blocks.packets.chunkdata.IdListPaletteFibber",
-    "blocks.packets.chunkdata.PalettedContainerFibber"
+    "blocks.packets.chunkdata.PalettedContainerFibber",
+    "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin"
   ],
   "client": [
   ],
