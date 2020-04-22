@@ -27,3 +27,7 @@ bin/
 # fabric
 
 run/
+
+# images
+icon.png
+banner.png
