@@ -1,36 +1,29 @@
 package dev.hephaestus.fiblib;
 
-import dev.hephaestus.fiblib.blocks.BlockFib;
-import dev.hephaestus.fiblib.blocks.FibScriptLoader;
-import dev.hephaestus.fiblib.blocks.ScriptedBlockFib;
+import dev.hephaestus.fiblib.blocks.*;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.server.world.ServerWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class FibLib implements ModInitializer {
 	public static final String MOD_ID = "fiblib";
 	private static final String MOD_NAME = "FibLib";
 
-	public static int COUNTER = 0;
-
 	private static final Logger LOGGER = LogManager.getLogger();
-	private static final String SAVE_KEY = "fiblib";
     public static boolean DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static void log(String msg) {
@@ -55,54 +48,29 @@ public class FibLib implements ModInitializer {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new FibScriptLoader());
 	}
 
-	private static MinecraftServer getServer() {
-		Object game = FabricLoader.getInstance().getGameInstance();
-		if (game instanceof MinecraftServer) {
-			return (MinecraftServer) game;
-		} else {
-			return null;
-		}
-	}
+	public static class Blocks {
+		private static final CompositeMap<BlockState> LOOKUPS = new CompositeMap<>(BlockState.class, ServerPlayerEntity.class);
+		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>();
+		private static int VERSION = 0;
 
-	public static class Blocks implements Tickable {
-		private static final HashMap<DimensionType, Blocks> INSTANCES = new HashMap<>(); // Will be used to track instances
-		private static final CompositeMap<BlockPos> BLOCKS = new CompositeMap<>(DimensionType.class, ChunkPos.class, BlockState.class); // Should not be static
-		private static final CompositeMap<BlockState> LOOKUPS = new CompositeMap<>(BlockState.class, ServerPlayerEntity.class); // Should stay static
-		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>(); // Should stay static
-
-		public Blocks getInstance(DimensionType dimensionType) {
-			return INSTANCES.get(dimensionType);
-		}
-
-		@Override
-		public void tick() {
-			MinecraftServer server = getServer();
-
-			if (server != null) {
-				Set<Map.Entry<CompositeMap.Key, BlockState>> set = LOOKUPS.entrySet();
-				ArrayList<BlockState> updates = new ArrayList<>();
-				for (Map.Entry<CompositeMap.Key, BlockState> entry : set) {
-					BlockState oldState = entry.getValue();
-					BlockState newState = FIBS.get((BlockState) entry.getKey().get(0)).get((BlockState) entry.getKey().get(0), (ServerPlayerEntity) entry.getKey().get(1));
-					if (newState != oldState) {
-						LOOKUPS.put(newState, entry.getKey());
-						updates.add(newState);
-					}
+		public static void tick() { // Fuck thread safety
+			Set<Map.Entry<CompositeMap.Key, BlockState>> set = LOOKUPS.entrySet();
+			IntList updates = new IntArrayList();
+			for (Map.Entry<CompositeMap.Key, BlockState> entry : set) {
+				BlockState oldState = entry.getValue();
+				BlockState newState = FIBS.get((BlockState) entry.getKey().get(0)).get((BlockState) entry.getKey().get(0), (ServerPlayerEntity) entry.getKey().get(1));
+				if (newState != oldState) {
+					LOOKUPS.put(newState, entry.getKey());
+					updates.add(Block.STATE_IDS.getId((BlockState) entry.getKey().get(0)));
 				}
+			}
 
-				for (BlockState update : updates) {
-					FibLib.debug("Should update: ", update.getBlock().getTranslationKey());
-				}
+			if (updates.size() > 0) {
+				VERSION++;
 			}
 		}
 
-		public static void track(DimensionType dimensionType, ChunkPos chunkPos, BlockState state, BlockPos pos) {
-			try {
-				BLOCKS.put(pos, dimensionType, chunkPos, state);
-			} catch (InvalidObjectException e) {
-				FibLib.debug("Failed to track block: ", e.getMessage());
-			}
-		}
+		public static int getVersion() {return VERSION;}
 
 		// API methods
 		/**

@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.ProtoChunk;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,21 +15,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Mixin(ProtoChunk.class)
 public class ProtoChunkMixin implements ChunkTracker {
     private final HashMap<Integer, LongSet> trackedBlocks = new HashMap<>();
+    private int version = -1;
 
     @Inject(method = "setBlockState", at = @At("HEAD"))
     public void trackBlock(BlockPos pos, BlockState state, boolean bl, CallbackInfoReturnable<BlockState> cir) {
-        long posLong = pos.asLong();
-        Integer id = Block.STATE_IDS.getId(state);
-        if (FibLib.Blocks.contains(state))
-            track(state, posLong);
-        else if (trackedBlocks.containsKey(id) && trackedBlocks.get(id).contains(posLong))
-            trackedBlocks.get(id).remove(posLong);
+        track(state, pos);
     }
 
     @Override
@@ -37,25 +33,37 @@ public class ProtoChunkMixin implements ChunkTracker {
     }
 
     @Override
-    public Set<Map.Entry<Integer, LongSet>> tracked() {
-        return trackedBlocks.entrySet();
+    public HashMap<Integer, LongSet> tracked() {
+        return trackedBlocks;
     }
 
     @Override
     public LongSet tracked(BlockState state) {
+        return trackedBlocks.getOrDefault(Block.STATE_IDS.getId(state), new LongOpenHashSet());
+    }
+
+    @Override
+    public void track(BlockState state, BlockPos pos) {
+        long posLong = pos.asLong();
         Integer id = Block.STATE_IDS.getId(state);
-        trackedBlocks.putIfAbsent(id, new LongOpenHashSet());
-        return trackedBlocks.get(id);
+
+        if (FibLib.Blocks.contains(state)) {
+            int stateId = Block.STATE_IDS.getId(state);
+
+            trackedBlocks.putIfAbsent(stateId, new LongOpenHashSet());
+            trackedBlocks.get(stateId).add(pos.asLong());
+        } else if (trackedBlocks.containsKey(id) && trackedBlocks.get(id).contains(posLong))
+            trackedBlocks.get(id).remove(posLong);
+    }
+
+
+    @Override
+    public int getVersion() {
+        return version;
     }
 
     @Override
-    public void track(BlockState state, long pos) {
-        track(Block.STATE_IDS.getId(state), pos);
-    }
-
-    @Override
-    public void track(Integer stateId, long pos) {
-        trackedBlocks.putIfAbsent(stateId, new LongOpenHashSet());
-        trackedBlocks.get(stateId).add(pos);
+    public void update() {
+        this.version = FibLib.Blocks.getVersion();
     }
 }

@@ -1,20 +1,31 @@
 package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
+import dev.hephaestus.fiblib.blocks.ChunkTracker;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Optional;
+
 @Mixin(ServerChunkManager.class)
 public class ServerChunkManagerMixin {
-    @Inject(method = "method_20801(JZ[Lnet/minecraft/entity/EntityCategory;ZILit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/util/math/BlockPos;ILnet/minecraft/server/world/ChunkHolder;)V", at = @At("HEAD"))
-    public void doThing(long ignored0, boolean ignored1, EntityCategory[] ignored2, boolean ignored3, int ignored4, Object2IntMap<EntityCategory> ignored5, BlockPos ignored6, int ignored7, ChunkHolder ignored8, CallbackInfo ci) {
-
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Inject(method = "method_20801(JZ[Lnet/minecraft/entity/EntityCategory;ZILit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/util/math/BlockPos;ILnet/minecraft/server/world/ChunkHolder;)V", at = @At(value = "HEAD"))
+    public void doThing(long l, boolean z0, EntityCategory [] e, boolean z1, int i0, Object2IntMap o0, BlockPos p0, int i1, ChunkHolder c0, CallbackInfo ci) {
+        Optional<WorldChunk> optional = c0.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
+        if (optional.isPresent()) {
+            ChunkTracker tracker = ChunkTracker.inject(optional.get());
+            if (tracker.getVersion() != FibLib.Blocks.getVersion()) {
+                tracker.update();
+            }
+        }
     }
 }

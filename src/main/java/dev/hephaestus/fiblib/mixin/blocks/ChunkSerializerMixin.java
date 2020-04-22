@@ -1,5 +1,6 @@
 package dev.hephaestus.fiblib.mixin.blocks;
 
+import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.blocks.ChunkTracker;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkSerializer;
 import net.minecraft.world.ChunkTickScheduler;
@@ -25,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static dev.hephaestus.fiblib.blocks.ChunkTracker.inject;
@@ -36,9 +39,9 @@ public class ChunkSerializerMixin {
                                     ChunkPos chunkPos, CompoundTag compoundTag, CompoundTag compoundTag2) {
         CompoundTag trackedStates = new CompoundTag();
         ChunkTracker tracker = inject(chunk);
-        for (Map.Entry<Integer, LongSet> entry : tracker.tracked()) {
+        for (Map.Entry<Integer, LongSet> entry : tracker.tracked().entrySet()) {
             LongArrayTag trackedBlocks = new LongArrayTag(entry.getValue());
-            trackedStates.put(entry.getKey().toString(), trackedBlocks);
+            trackedStates.put(String.valueOf(entry.getKey()), trackedBlocks);
         }
 
         int[] tracked = new int[tracker.trackedStates().size()];
@@ -49,9 +52,10 @@ public class ChunkSerializerMixin {
         trackedStates.putIntArray("TrackedStates", tracked);
 
         compoundTag2.put("TrackedBlocks", trackedStates);
+
     }
 
-    @Inject(method = "deserialize", at = @At(value = "JUMP", opcode = Opcodes.IF_ACMPNE, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "deserialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/Chunk;setLightOn(Z)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void loadTracked(ServerWorld serverWorld, StructureManager structureManager, PointOfInterestStorage pointOfInterestStorage, ChunkPos chunkPos, CompoundTag compoundTag, CallbackInfoReturnable<ProtoChunk> cir,
                                     ChunkGenerator<?> chunkGenerator, BiomeSource biomeSource, CompoundTag compoundTag2, BiomeArray biomeArray, UpgradeData upgradeData, ChunkTickScheduler<Block> chunkTickScheduler,
                                     ChunkTickScheduler<Fluid> chunkTickScheduler2, boolean bl, ListTag listTag, int i, ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager, LightingProvider lightingProvider,
@@ -64,7 +68,7 @@ public class ChunkSerializerMixin {
                     if (trackedStates.contains(s + "", 12)) {
                         long[] trackedBlocks = trackedStates.getLongArray(s + "");
                         for (long pos : trackedBlocks) {
-                            tracker.track(s, pos);
+                            tracker.track(Block.STATE_IDS.get(s), BlockPos.fromLong(pos));
                         }
                     }
                 }
