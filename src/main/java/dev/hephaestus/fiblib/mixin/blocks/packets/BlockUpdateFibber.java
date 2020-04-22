@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(BlockUpdateS2CPacket.class)
 public class BlockUpdateFibber implements Fibber {
     @Shadow private BlockState state;
-    @Shadow private BlockPos pos;
 
     @Override
     public void fix(ServerPlayerEntity player) {

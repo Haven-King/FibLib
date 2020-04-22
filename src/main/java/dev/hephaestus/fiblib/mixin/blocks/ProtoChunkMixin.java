@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.ProtoChunk;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +19,7 @@ import java.util.Set;
 @Mixin(ProtoChunk.class)
 public class ProtoChunkMixin implements ChunkTracker {
     private final HashMap<Integer, LongSet> trackedBlocks = new HashMap<>();
-    private int version = -1;
+    private int version = -1; // Differs from the default FibLib.Blocks version to force an initial update
 
     @Inject(method = "setBlockState", at = @At("HEAD"))
     public void trackBlock(BlockPos pos, BlockState state, boolean bl, CallbackInfoReturnable<BlockState> cir) {

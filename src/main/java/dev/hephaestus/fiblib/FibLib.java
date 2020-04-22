@@ -53,7 +53,7 @@ public class FibLib implements ModInitializer {
 		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>();
 		private static int VERSION = 0;
 
-		public static void tick() { // Fuck thread safety
+		public static void tick() {
 			Set<Map.Entry<CompositeMap.Key, BlockState>> set = LOOKUPS.entrySet();
 			IntList updates = new IntArrayList();
 			for (Map.Entry<CompositeMap.Key, BlockState> entry : set) {

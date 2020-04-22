@@ -1,6 +1,5 @@
 package dev.hephaestus.fiblib.mixin.blocks;
 
-import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.blocks.ChunkTracker;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
@@ -20,14 +19,12 @@ import net.minecraft.world.chunk.*;
 import net.minecraft.world.chunk.light.LightingProvider;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.poi.PointOfInterestStorage;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import static dev.hephaestus.fiblib.blocks.ChunkTracker.inject;

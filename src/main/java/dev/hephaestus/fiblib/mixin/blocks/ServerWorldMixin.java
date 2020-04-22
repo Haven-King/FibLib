@@ -13,12 +13,9 @@ import java.util.function.BooleanSupplier;
 
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin {
-    private FibLib.Blocks blockFibber;
-
-    int i = 0;
     @Inject(method = "tick", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void tickFibber(BooleanSupplier shouldKeepTicking, CallbackInfo ci, Profiler profiler) {
-        profiler.push("fiblib");
+        profiler.push("FibLib.Blocks.Tick");
         FibLib.Blocks.tick();
         profiler.pop();
     }

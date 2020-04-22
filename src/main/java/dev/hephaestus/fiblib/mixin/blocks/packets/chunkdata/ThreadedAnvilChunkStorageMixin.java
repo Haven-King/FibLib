@@ -1,7 +1,6 @@
 package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import dev.hephaestus.fiblib.blocks.ChunkDataFibber;
-import dev.hephaestus.fiblib.blocks.ChunkStorageAccessor;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.network.Packet;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ThreadedAnvilChunkStorage.class)
-public abstract class ThreadedAnvilChunkStorageMixin implements ChunkStorageAccessor {
+public abstract class ThreadedAnvilChunkStorageMixin {
     @Shadow @Final private ServerLightingProvider serverLightingProvider;
     @Shadow @Final private LongSet loadedChunks;
 
@@ -35,10 +34,5 @@ public abstract class ThreadedAnvilChunkStorageMixin implements ChunkStorageAcce
             ChunkDataFibber.fix(packets_1[0]).fix(worldChunk_1, 65535, serverPlayerEntity_1);
             packets_1[1] = new LightUpdateS2CPacket(worldChunk_1.getPos(), this.serverLightingProvider);
         }
-    }
-
-    @Override
-    public Iterable<ChunkHolder> getLoadedChunks() {
-        return this.entryIterator();
     }
 }

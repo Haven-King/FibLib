@@ -2,7 +2,6 @@ package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.blocks.ChunkTracker;
-import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
@@ -31,7 +30,7 @@ public class WorldChunkMixin implements ChunkTracker {
 
     @Inject(method = "<init>(Lnet/minecraft/world/World;Lnet/minecraft/world/chunk/ProtoChunk;)V", at = @At("TAIL"))
     public void copyTrackedBlocks(World world, ProtoChunk protoChunk, CallbackInfo ci) {
-        this.trackedBlocks.putAll(ChunkTracker.inject(protoChunk).tracked());
+        this.trackedBlocks = ChunkTracker.inject(protoChunk).tracked();
     }
 
     @Inject(method = "setBlockState", at = @At("HEAD"))
