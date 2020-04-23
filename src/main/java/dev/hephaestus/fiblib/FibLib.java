@@ -1,6 +1,9 @@
 package dev.hephaestus.fiblib;
 
-import dev.hephaestus.fiblib.blocks.*;
+import dev.hephaestus.fiblib.blocks.BlockFib;
+import dev.hephaestus.fiblib.blocks.ChunkTracker;
+import dev.hephaestus.fiblib.blocks.FibScriptLoader;
+import dev.hephaestus.fiblib.blocks.ScriptedBlockFib;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.ModInitializer;
@@ -8,16 +11,18 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Pair;
+import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.InvalidObjectException;
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FibLib implements ModInitializer {
 	public static final String MOD_ID = "fiblib";
@@ -49,32 +54,66 @@ public class FibLib implements ModInitializer {
 	}
 
 	public static class Blocks {
-		private static final CompositeMap<BlockState> LOOKUPS = new CompositeMap<>(BlockState.class, ServerPlayerEntity.class);
+		/*   Fuck everything about this ----------------------------------------------------------------------------------------- */
+		/**/ private static final HashMap<BlockState, BlockState> LOOKUPS_1 = new HashMap<>();
+		/**/ private static final HashMap<Pair<BlockState, ServerPlayerEntity>, BlockState> LOOKUPS_2 = new HashMap<>();
+		/**/ private static final HashMap<Triple<BlockState, ServerPlayerEntity, BlockPos>, BlockState> LOOKUPS_3 = new HashMap<>();
+		/* ---------------------------------------------------------------------------------------------------------------------- */
+
 		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>();
 		private static int VERSION = 0;
 
+		static final long rate = 20;
+		static int ticks = 0;
 		public static void tick() {
-			Set<Map.Entry<CompositeMap.Key, BlockState>> set = LOOKUPS.entrySet();
-			IntList updates = new IntArrayList();
-			for (Map.Entry<CompositeMap.Key, BlockState> entry : set) {
-				BlockState oldState = entry.getValue();
-				BlockState newState = FIBS.get((BlockState) entry.getKey().get(0)).get((BlockState) entry.getKey().get(0), (ServerPlayerEntity) entry.getKey().get(1));
-				if (newState != oldState) {
-					LOOKUPS.put(newState, entry.getKey());
-					updates.add(Block.STATE_IDS.getId((BlockState) entry.getKey().get(0)));
+			if (ticks % rate == 0) {
+				IntList updates = new IntArrayList();
+
+				for (Map.Entry<Triple<BlockState, ServerPlayerEntity, BlockPos>, BlockState> entry : LOOKUPS_3.entrySet()) {
+					BlockState oldState = entry.getValue();
+
+					BlockState input = entry.getKey().getLeft();
+					ServerPlayerEntity player = entry.getKey().getMiddle();
+					BlockPos pos = entry.getKey().getRight();
+
+					BlockState newState = FIBS.get(input).get(input, player, pos);
+
+					if (newState != oldState) {
+						LOOKUPS_3.put(entry.getKey(), newState);
+						updates.add(Block.STATE_IDS.getId(input));
+					}
 				}
+
+				for (Map.Entry<Pair<BlockState, ServerPlayerEntity>, BlockState> entry : LOOKUPS_2.entrySet()) {
+					BlockState oldState = entry.getValue();
+
+					BlockState input = entry.getKey().getLeft();
+					ServerPlayerEntity player = entry.getKey().getRight();
+
+					BlockState newState = FIBS.get(input).get(input, player, null);
+
+					if (newState != oldState) {
+						LOOKUPS_2.put(entry.getKey(), newState);
+						updates.add(Block.STATE_IDS.getId(input));
+					}
+				}
+
+				if (updates.size() > 0) {
+					FibLib.debug("Updating %s", updates.toString());
+					VERSION++;
+				}
+
+				ticks = 0;
 			}
 
-			if (updates.size() > 0) {
-				VERSION++;
-			}
+			ticks++;
 		}
 
 		public static int getVersion() {return VERSION;}
 
 		// API methods
 		/**
-		 * Use this function to register Fibs.
+		 * Use this function to register Fibs that aren't created with scripts.
 		 *
 		 * @param state the block to be fibbed
 		 * @param fib   the fib itself. Can be a lambda expression for simpler fibs, or an implementation of BlockFib for
@@ -91,22 +130,39 @@ public class FibLib implements ModInitializer {
 		 * @param state  the state of the block we're inquiring about. Note that because this is passed to a BlockFib, other
 		 *               aspects of the state than the Block may be used in determining the output
 		 * @param player the player who we will be fibbing to
+		 * @param pos	 position of the block we're interested in
 		 * @return the result of the fib. This is what the player will get told the block is
 		 */
-		public static BlockState get(BlockState state, ServerPlayerEntity player) {
-			if (player == null) return state;
+		public static BlockState get(BlockState state, @Nullable ServerPlayerEntity player, @Nullable BlockPos pos) {
+			if (!FIBS.containsKey(state)) return state;
 
-			try {
-				if (!LOOKUPS.containsKey(state, player) && FIBS.containsKey(state))
-					LOOKUPS.put(FIBS.get(state).get(state, player), state, player);
+			Object key;
+			HashMap lookups;
 
-				return LOOKUPS.getOrDefault(state, state, player);
-			} catch (InvalidObjectException e) {
-				FibLib.debug("Invalid key: ", e.getMessage());
-				return state;
+			if (player != null && pos != null) {
+				key = new ImmutableTriple<>(state, player, pos);
+				ChunkTracker.inject(player.getServerWorld().getChunk(pos)).track(state, pos);
+				lookups = LOOKUPS_3;
+			} else if (player != null) {
+				key = new Pair<>(state, player);
+				lookups = LOOKUPS_2;
+			} else {
+				key = state;
+				lookups = LOOKUPS_1;
 			}
+
+			if (!lookups.containsKey(key))
+				lookups.put(key, FIBS.get(state).get(state, player, pos));
+
+			return (BlockState) lookups.getOrDefault(state, state);
 		}
 
+		/**
+		 * Returns whether or not a fib exists for the given state.
+		 *
+		 * @param state the state to inquire about
+		 * @return the result of the inquiry
+		 */
 		public static boolean contains(BlockState state) {
 			return FIBS.containsKey(state);
 		}

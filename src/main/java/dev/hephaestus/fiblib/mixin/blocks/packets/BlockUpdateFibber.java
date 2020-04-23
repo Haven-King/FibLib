@@ -8,13 +8,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.Inject;
 
 @Mixin(BlockUpdateS2CPacket.class)
 public class BlockUpdateFibber implements Fibber {
     @Shadow private BlockState state;
 
+    @Shadow private BlockPos pos;
+
     @Override
     public void fix(ServerPlayerEntity player) {
-        this.state = FibLib.Blocks.get(state, player);
+        this.state = FibLib.Blocks.get(state, player, this.pos);
     }
 }

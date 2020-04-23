@@ -1,5 +1,15 @@
-var inState = fiblib.getDefaultBlockstate("minecraft:coal_ore");
-var outState = fiblib.getDefaultBlockstate("minecraft:coal_ore");
+function getInput() {
+    if (fiblib.inState != null)
+        return fiblib.inState;
+    else
+        return fiblib.getDefaultBlockstate("minecraft:coal_ore");
+}
 
-if (!player.isCreative())
-    outState = fiblib.getDefaultBlockstate("minecraft:glowstone");
+function getOutput() {
+    if (fiblib.player == null || fiblib.player.isCreative())
+        return getInput();
+    else {
+
+        return fiblib.getDefaultBlockstate("minecraft:glowstone");
+    }
+}

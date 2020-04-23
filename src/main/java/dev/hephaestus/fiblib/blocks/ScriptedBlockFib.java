@@ -1,26 +1,26 @@
 package dev.hephaestus.fiblib.blocks;
 
-import javax.annotation.Nullable;
-
 import dev.hephaestus.fiblib.FibLib;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.RayTraceContext;
 
+import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 // I am blatantly copying much of this from LibCD. Yay MIT!
 public class ScriptedBlockFib implements BlockFib {
-    private static final boolean DEBUG = FibLib.DEBUG;
     private final ScriptEngine engine;
     private final String scriptText;
     private final Identifier id;
-    private boolean hasRun = false;
-    private boolean hasErrored = false;
     private BlockState input;
 
     public ScriptedBlockFib(ScriptEngine engine, String scriptText, Identifier id) {
@@ -29,34 +29,15 @@ public class ScriptedBlockFib implements BlockFib {
         this.id = id;
     }
 
-    public BlockState getDefaultBlockstate(String id) {
-        return Registry.BLOCK.get(new Identifier(id)).getDefaultState();
-    }
-
-    public void log(String msg) {
-        FibLib.log(msg);
-    }
-
-    public BlockState run(BlockState state, ServerPlayerEntity player) {
-        if (hasErrored) return state;
-
+    public BlockState output(BlockState state, ServerPlayerEntity player, BlockPos pos) {
         ScriptContext ctx = engine.getContext();
-        ctx.setAttribute("fiblib", this, ScriptContext.ENGINE_SCOPE);
-        ctx.setAttribute("player", player, ScriptContext.ENGINE_SCOPE);
+        ctx.setAttribute("fiblib", new Data(state, player, pos), ScriptContext.ENGINE_SCOPE);
 
         try {
             engine.eval(scriptText);
-        } catch (ScriptException e) {
-            if (!hasErrored) {
-                hasErrored = true;
-                FibLib.log("Failed to execute script %s: %s", id.toString(), e.getMessage());
-            }
-        }
-
-        if (!hasErrored) {
-            hasRun = true;
-            return (BlockState) engine.getBindings(ScriptContext.ENGINE_SCOPE).get("outState");
-        } else {
+            return (BlockState)((Invocable)engine).invokeFunction("getOutput");
+        } catch (ScriptException | NoSuchMethodException e) {
+            FibLib.log("Error getting output from Script %s: %s", this.id.toString(), e.getMessage());
             return state;
         }
     }
@@ -66,22 +47,72 @@ public class ScriptedBlockFib implements BlockFib {
      * @return The BlockState of the block we're fibbing.
      */
     public BlockState input() {
-        if (hasRun) return (BlockState) engine.getBindings(ScriptContext.ENGINE_SCOPE).get("inState");
+        if (input != null) return input;
 
         ScriptContext ctx = engine.getContext();
-        ctx.setAttribute("fiblib", this, ScriptContext.ENGINE_SCOPE);
+        ctx.setAttribute("fiblib", new Data(), ScriptContext.ENGINE_SCOPE);
 
         try {
             engine.eval(scriptText);
-        } catch (ScriptException ignored) {
+            input = (BlockState)((Invocable)engine).invokeFunction("getInput");
+        } catch (ScriptException | NoSuchMethodException e) {
+            FibLib.log("Error getting input from Script %s: %s", this.id.toString(), e.getMessage());
         }
 
-        return (BlockState) engine.getBindings(ScriptContext.ENGINE_SCOPE).get("inState");
+        return input;
     }
 
     @Override
-    public BlockState get(BlockState state, ServerPlayerEntity player) {
-        BlockState out = run(state, player);
+    public BlockState get(BlockState state, ServerPlayerEntity player, BlockPos pos) {
+        BlockState out = output(state, player, pos);
         return out == null ? state : out;
+    }
+
+    public static class Data {
+        public static final boolean debug = FibLib.DEBUG;
+        public final ServerPlayerEntity player;
+        public final BlockState inState;
+        public final BlockPos blockPos;
+
+        private static Vec3d getLooking(ServerPlayerEntity player) {
+            float f = -MathHelper.sin(player.yaw * 0.017453292F) * MathHelper.cos(player.pitch * 0.017453292F);
+            float g = -MathHelper.sin(player.pitch * 0.017453292F);
+            float h = MathHelper.cos(player.yaw * 0.017453292F) * MathHelper.cos(player.pitch * 0.017453292F);
+
+            return new Vec3d(f,g,h);
+        }
+
+        public boolean isLookingAt(int range) {
+            if (player == null || blockPos == null) return false;
+
+            BlockHitResult result = player.world.rayTrace(new RayTraceContext(
+                    player.getCameraPosVec(1.0f),
+                    player.getCameraPosVec(1.0f).add(getLooking(player).multiply(range)),
+                    RayTraceContext.ShapeType.OUTLINE, RayTraceContext.FluidHandling.NONE, player
+            ));
+
+            return result != null && blockPos.equals(result.getBlockPos());
+        }
+
+
+        protected Data(BlockState inState, ServerPlayerEntity player, BlockPos pos) {
+            this.player = player;
+            this.inState = inState;
+            this.blockPos = pos;
+        }
+
+        protected Data() {
+            this.player = null;
+            this.inState = null;
+            this.blockPos = null;
+        }
+
+        public BlockState getDefaultBlockstate(String id) {
+            return Registry.BLOCK.get(new Identifier(id)).getDefaultState();
+        }
+
+        public void log(String msg) {
+            FibLib.log(msg);
+        }
     }
 }

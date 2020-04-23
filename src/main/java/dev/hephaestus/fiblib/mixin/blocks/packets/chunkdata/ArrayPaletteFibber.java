@@ -22,12 +22,12 @@ public class ArrayPaletteFibber<T> implements Fibber {
 
     @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
     public int toPacketRedir(IdList<T> idList, T object) {
-        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player, null));
     }
 
     @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
     public int getPacketSizeRedir(IdList<T> idList, T object) {
-        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player, null));
     }
 
     private ServerPlayerEntity player;

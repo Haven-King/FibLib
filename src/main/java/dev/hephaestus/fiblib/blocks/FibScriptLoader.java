@@ -42,7 +42,8 @@ public class FibScriptLoader implements SimpleResourceReloadListener {
                         continue;
                     }
                     ScriptedBlockFib bridge = new ScriptedBlockFib(engine, scriptText, script);
-                    FIBS.put(bridge.input(), bridge);
+                    if (bridge.input() != null)
+                        FIBS.put(bridge.input(), bridge);
                 } catch (IOException e) {
                     FibLib.log("Couldn't access file %s: ", file.toString(), e.getMessage());
                 }

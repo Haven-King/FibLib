@@ -12,8 +12,10 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(BlockActionS2CPacket.class)
 public class BlockActionFibber<T> implements Fibber {
     @Shadow private Block block;
+    @Shadow private BlockPos pos;
+
     @Override
     public void fix(ServerPlayerEntity player) {
-        this.block = FibLib.Blocks.get(block.getDefaultState(), player).getBlock();
+        this.block = FibLib.Blocks.get(block.getDefaultState(), player, this.pos).getBlock();
     }
 }

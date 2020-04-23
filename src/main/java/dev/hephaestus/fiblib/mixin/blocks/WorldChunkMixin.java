@@ -59,10 +59,13 @@ public class WorldChunkMixin implements ChunkTracker {
         Integer id = Block.STATE_IDS.getId(state);
 
         if (FibLib.Blocks.contains(state)) {
+
             int stateId = Block.STATE_IDS.getId(state);
 
             trackedBlocks.putIfAbsent(stateId, new LongOpenHashSet());
             trackedBlocks.get(stateId).add(pos.asLong());
+
+            FibLib.debug("Trying to track %s: %d", state.toString(), trackedBlocks.size());
         } else if (trackedBlocks.containsKey(id) && trackedBlocks.get(id).contains(posLong))
             trackedBlocks.get(id).remove(posLong);
     }
@@ -74,12 +77,14 @@ public class WorldChunkMixin implements ChunkTracker {
 
     @Override
     public void update() {
-        for (LongSet s : trackedBlocks.values()) {
-            for (Long l : s) {
-                if (!this.world.isClient)
-                    ((ServerWorld)this.world).getChunkManager().markForUpdate(BlockPos.fromLong(l));
+        if (this.version != FibLib.Blocks.getVersion()) {
+            for (LongSet s : trackedBlocks.values()) {
+                for (Long l : s) {
+                    if (!this.world.isClient)
+                        ((ServerWorld) this.world).getChunkManager().markForUpdate(BlockPos.fromLong(l));
+                }
             }
+            this.version = FibLib.Blocks.getVersion();
         }
-        this.version = FibLib.Blocks.getVersion();
     }
 }
