@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'fabric-loom' version '0.2.7-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -12,6 +12,10 @@ group = project.maven_group
 
 repositories {
 	maven {
+		name = "Onyx Studios"
+		url = "https://maven.onyxstudios.dev"
+	}
+	maven {
 		name = "Ladysnake Libs"
 		url = 'https://dl.bintray.com/ladysnake/libs'
 	}
@@ -22,6 +26,9 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
+	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
 
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
