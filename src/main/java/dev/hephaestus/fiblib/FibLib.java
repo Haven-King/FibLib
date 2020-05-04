@@ -43,12 +43,7 @@ public class FibLib implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		Blocks.register(new BlockFib(net.minecraft.block.Blocks.COAL_ORE, net.minecraft.block.Blocks.GLOWSTONE) {
-			@Override
-			protected boolean condition(ServerPlayerEntity player) {
-				return !player.isCreative();
-			}
-		});
+		FibLib.log("Initialized");
 	}
 
 	public static class Blocks {
