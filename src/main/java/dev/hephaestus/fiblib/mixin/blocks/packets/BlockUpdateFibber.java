@@ -18,6 +18,6 @@ public class BlockUpdateFibber implements Fibber {
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        this.state = FibLib.Blocks.get(state, player, this.pos);
+        this.state = FibLib.Blocks.get(state, player);
     }
 }

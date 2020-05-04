@@ -16,6 +16,6 @@ public class BlockActionFibber<T> implements Fibber {
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        this.block = FibLib.Blocks.get(block.getDefaultState(), player, this.pos).getBlock();
+        this.block = FibLib.Blocks.get(block.getDefaultState(), player).getBlock();
     }
 }

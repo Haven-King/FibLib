@@ -15,6 +15,6 @@ public class PlayerActionFibber implements Fibber {
     @Shadow private BlockPos pos;
 
     public void fix(ServerPlayerEntity player) {
-        this.state = FibLib.Blocks.get(state, player, this.pos);
+        this.state = FibLib.Blocks.get(state, player);
     }
 }

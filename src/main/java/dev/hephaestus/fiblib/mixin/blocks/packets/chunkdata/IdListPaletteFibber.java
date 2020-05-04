@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class IdListPaletteFibber<T> implements Fibber {
     @Redirect(method = "getIndex", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
     public int getIndexRedir(IdList<T> idList, T object) {
-        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player, null));
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
     }
 
     private ServerPlayerEntity player;
