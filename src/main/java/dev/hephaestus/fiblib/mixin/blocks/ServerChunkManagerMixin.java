@@ -1,7 +1,7 @@
 package dev.hephaestus.fiblib.mixin.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
-import dev.hephaestus.fiblib.blocks.ChunkTracker;
+import dev.hephaestus.fiblib.blocks.BlockTracker;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ChunkHolder;
@@ -21,11 +21,9 @@ public class ServerChunkManagerMixin {
     @Inject(method = "method_20801(JZ[Lnet/minecraft/entity/EntityCategory;ZILit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/util/math/BlockPos;ILnet/minecraft/server/world/ChunkHolder;)V", at = @At(value = "HEAD"))
     public void doThing(long l, boolean z0, EntityCategory [] e, boolean z1, int i0, Object2IntMap o0, BlockPos p0, int i1, ChunkHolder c0, CallbackInfo ci) {
         Optional<WorldChunk> optional = c0.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
-        if (optional.isPresent()) {
-            ChunkTracker tracker = ChunkTracker.inject(optional.get());
-            if (tracker.getVersion() != FibLib.Blocks.getVersion()) {
-                tracker.update();
-            }
+        BlockTracker tracker;
+        if (optional.isPresent() && (tracker = FibLib.Blocks.TRACKER.get(optional.get())).getVersion() != FibLib.Blocks.getVersion()) {
+            tracker.update();
         }
     }
 }

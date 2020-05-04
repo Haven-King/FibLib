@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 public class BlockUpdateFibber implements Fibber {
     @Shadow private BlockState state;
 
-    @Shadow private BlockPos pos;
-
     @Override
     public void fix(ServerPlayerEntity player) {
         this.state = FibLib.Blocks.get(state, player);

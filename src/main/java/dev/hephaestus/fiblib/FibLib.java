@@ -1,28 +1,21 @@
 package dev.hephaestus.fiblib;
 
 import dev.hephaestus.fiblib.blocks.BlockFib;
-import dev.hephaestus.fiblib.blocks.ChunkTracker;
+import dev.hephaestus.fiblib.blocks.BlockTracker;
 import dev.hephaestus.fiblib.blocks.LookupTable;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import nerdhub.cardinal.components.api.ComponentRegistry;
+import nerdhub.cardinal.components.api.ComponentType;
+import nerdhub.cardinal.components.api.event.ChunkComponentCallback;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.BlockPos;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings("unused")
 public class FibLib implements ModInitializer {
@@ -59,6 +52,13 @@ public class FibLib implements ModInitializer {
 	}
 
 	public static class Blocks {
+		public static final ComponentType<BlockTracker> TRACKER =
+				ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("fiblib:blocks.tracker"), BlockTracker.class);
+
+		static {
+			ChunkComponentCallback.EVENT.register((chunk, components) -> components.put(TRACKER, new BlockTracker(chunk)));
+		}
+
 		private static final LookupTable LOOKUPS = new LookupTable();
 
 		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>();

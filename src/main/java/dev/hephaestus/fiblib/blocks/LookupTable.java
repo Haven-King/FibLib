@@ -39,7 +39,6 @@ public class LookupTable {
 
             if (newState != oldState) {
                 playerLookupTable.put(key, newState);
-                FibLib.debug("Updating %s. Now: %s", oldState.getBlock().getTranslationKey(), newState.getBlock().getTranslationKey());
                 ++updates;
             }
         }
