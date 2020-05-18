@@ -4,7 +4,7 @@ import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.Fibber;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.IdList;
+import net.minecraft.util.collection.IdList;
 import net.minecraft.world.chunk.ArrayPalette;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,12 +20,12 @@ public class ArrayPaletteFibber<T> implements Fibber {
         this.idList = idList;
     }
 
-    @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
+    @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getId(Ljava/lang/Object;)I"))
     public int toPacketRedir(IdList<T> idList, T object) {
         return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
     }
 
-    @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/IdList;getId(Ljava/lang/Object;)I"))
+    @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getId(Ljava/lang/Object;)I"))
     public int getPacketSizeRedir(IdList<T> idList, T object) {
         return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
     }

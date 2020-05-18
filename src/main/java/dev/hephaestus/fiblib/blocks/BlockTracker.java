@@ -22,7 +22,7 @@ import java.util.Set;
 public class BlockTracker implements CopyableComponent {
     public final Chunk chunk;
 
-    private HashMap<Integer, LongSet> trackedBlocks = new HashMap<>();
+    private final HashMap<Integer, LongSet> trackedBlocks = new HashMap<>();
     private int version = -1;
 
     public BlockTracker(Chunk chunk) {
