@@ -7,7 +7,6 @@
     "blocks.ChunkMixin",
     "blocks.PacketFibber",
     "blocks.ServerChunkManagerMixin",
-    "blocks.ServerPlayerEntityMixin",
     "blocks.ServerWorldMixin",
     "blocks.packets.BlockUpdateFibber",
     "blocks.packets.PlayerActionFibber",
