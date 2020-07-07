@@ -12,12 +12,7 @@ group = project.maven_group
 
 repositories {
 	maven {
-		name = "Onyx Studios"
-		url = "https://maven.onyxstudios.dev"
-	}
-	maven {
-		name = "JitPack"
-		url = uri("https://jitpack.io")
+		url  "https://dl.bintray.com/ladysnake/libs"
 	}
 }
 
@@ -26,8 +21,8 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
-	modImplementation "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}"
+	modImplementation "io.github.onyxstudios:Cardinal-Components-API:${project.cardinal_version}"
+	include "io.github.onyxstudios:Cardinal-Components-API:${project.cardinal_version}"
 
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
@@ -70,7 +65,6 @@ jar {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
 			artifact(remapJar) {
 				builtBy remapJar
 			}
@@ -79,14 +73,11 @@ publishing {
 			}
 		}
 	}
-
 	repositories {
 		maven {
-			name = "GithubPackages"
-			url "https://maven.pkg.github.com/Hephaestus-Dev/FibLib"
-			credentials {
-				username = "Hephaestus-Dev"
-				password = System.getenv("GITHUB_TOKEN")
+			url 's3://hephaestus.dev/release'
+			authentication {
+				awsIm(AwsImAuthentication)
 			}
 		}
 	}
