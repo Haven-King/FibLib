@@ -81,12 +81,17 @@ public class FibLib implements ModInitializer {
 		 * @param state  the state of the block we're inquiring about. Note that because this is passed to a BlockFib, other
 		 *               aspects of the state than the Block may be used in determining the output
 		 * @param player the player who we will be fibbing to
+		 * @param soft if the block fib is soft, and the caller is soft, don't fib
 		 * @return the result of the fib. This is what the player will get told the block is
 		 */
-		public static BlockState get(BlockState state, @Nullable ServerPlayerEntity player) {
+		public static BlockState get(BlockState state, @Nullable ServerPlayerEntity player, boolean soft) {
 			if (!FIBS.containsKey(state)) return state;
 
 			BlockFib fib = FIBS.get(state);
+
+			if (soft && fib.isSoft()) {
+				return state;
+			}
 
 			return LOOKUPS.get(fib, state, player);
 		}

@@ -22,7 +22,7 @@ public class ChunkDeltaFibber implements Fibber {
             stateField.setAccessible(true);
             for (ChunkDeltaUpdateS2CPacket.ChunkDeltaRecord record : this.records) {
                 BlockState before = record.getState();
-                stateField.set(record, FibLib.Blocks.get(before, player));
+                stateField.set(record, FibLib.Blocks.get(before, player, false));
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();

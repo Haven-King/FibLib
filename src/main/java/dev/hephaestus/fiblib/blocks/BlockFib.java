@@ -35,4 +35,11 @@ public abstract class BlockFib {
     }
 
     protected abstract boolean condition(ServerPlayerEntity player);
+
+    /**
+     * @return does not fib on block update (i.e. player right click)
+     */
+	public boolean isSoft() {
+	    return false;
+    }
 }

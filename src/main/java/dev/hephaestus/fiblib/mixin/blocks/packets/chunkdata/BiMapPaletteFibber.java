@@ -10,17 +10,18 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@SuppressWarnings("unchecked")
 @Mixin(BiMapPalette.class)
 public class BiMapPaletteFibber<T> implements Fibber {
     ServerPlayerEntity player;
     @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getId(Ljava/lang/Object;)I"))
     public int toPacketRedir(IdList<T> idList, T object) {
-        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player, false));
     }
 
     @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getId(Ljava/lang/Object;)I"))
     public int packetSizeRedir(IdList<T> idList, T object) {
-        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player));
+        return idList.getId((T) FibLib.Blocks.get((BlockState) object, this.player, false));
     }
 
 
