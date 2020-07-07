@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "dev.hephaestus.fiblib.mixin",
+  "plugin": "dev.hephaestus.fiblib.mixin.blocks.VolatileMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "blocks.ChunkMixin",
@@ -17,6 +18,7 @@
     "blocks.packets.chunkdata.ChunkHolderFibber",
     "blocks.packets.chunkdata.ChunkSectionFibber",
     "blocks.packets.chunkdata.IdListPaletteFibber",
+    "blocks.packets.chunkdata.LithiumHashPaletteFibber",
     "blocks.packets.chunkdata.PalettedContainerFibber",
     "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin"
   ],
