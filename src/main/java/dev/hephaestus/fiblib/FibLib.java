@@ -133,10 +133,7 @@ public class FibLib implements ModInitializer {
 		 */
 		public static ItemStack get(ItemStack input, @Nullable ServerPlayerEntity player, @Nullable ItemContext context) {
 			Item inputItem = input.getItem();
-			if (!input.isEmpty()) {
-				input.setCount(54);
-				return input.setCustomName(new LiteralText("yeet"));
-			}
+
 			if (!FIBS.containsKey(inputItem)) return input;
 
 			ItemFib fib = FIBS.get(inputItem);
