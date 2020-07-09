@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -20,7 +21,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -110,6 +113,7 @@ public class FibLib implements ModInitializer {
 
 	public static class Items {
 		private static final Map<Item, ItemFib> FIBS = new HashMap<>();
+		private static final List<ItemFib> GLOBAL_FIBS = new ArrayList<>();
 
 		/**
 		 * Registers an ItemFib for the specified item.
@@ -123,22 +127,38 @@ public class FibLib implements ModInitializer {
 		}
 
 		/**
+		 * Register a global ItemFib, this ItemFib will be applied to all items. Even air
+		 * @param fib fib to register
+		 */
+		public static void registerGlobal(ItemFib fib) {
+			GLOBAL_FIBS.add(fib);
+		}
+
+		/**
 		 * Returns the result of any fibs on a given BlockState
 		 *
 		 * @param input  The ItemStack block we're inquiring about. Note that because this is passed to a ItemFib, other
-		 *               aspects of ItemStack, like nbt, may be used in determining the output
+		 *               aspects of ItemStack, like nbt, may be used in determining the output.
 		 * @param player The player we're sending to
 		 * @param context The context in which this ItemStack is being used
 		 * @return the result of the fib. This is what the player will get told the item is.
 		 */
 		public static ItemStack get(ItemStack input, @Nullable ServerPlayerEntity player, @Nullable ItemContext context) {
+			ItemStack inputa = input;
 			Item inputItem = input.getItem();
 
-			if (!FIBS.containsKey(inputItem)) return input;
+			if (!GLOBAL_FIBS.isEmpty()) {
+				inputa = input.copy();
+				for (ItemFib f : GLOBAL_FIBS) {
+					inputa = f.getOutput(inputa, player, context);
+				}
+			}
+
+			if (!FIBS.containsKey(inputItem)) return inputa;
 
 			ItemFib fib = FIBS.get(inputItem);
 
-			return fib.getOutput(input, player, context);
+			return fib.getOutput(inputa, player, context);
 		}
 
 		/**

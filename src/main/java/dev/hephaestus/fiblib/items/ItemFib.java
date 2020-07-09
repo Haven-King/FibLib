@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 /**
  * Defines an itemFib. This class will convert the serverside item into a clientside one.
  */
-public abstract class ItemFib {
+public interface ItemFib {
     /**
      * Convert an ItemStack to it's clientside version
      * @param input The original ItemStack
@@ -16,5 +16,5 @@ public abstract class ItemFib {
      * @param context The context in which this ItemStack is being used
      * @return
      */
-    public abstract ItemStack getOutput(ItemStack input, @Nullable ServerPlayerEntity player, @Nullable ItemContext context);
+    ItemStack getOutput(ItemStack input, @Nullable ServerPlayerEntity player, @Nullable ItemContext context);
 }
