@@ -3,12 +3,15 @@ package dev.hephaestus.fiblib;
 import dev.hephaestus.fiblib.blocks.BlockFib;
 import dev.hephaestus.fiblib.blocks.BlockTracker;
 import dev.hephaestus.fiblib.blocks.LookupTable;
+import dev.hephaestus.fiblib.items.ItemFib;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.event.ChunkComponentCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class FibLib implements ModInitializer {
@@ -99,6 +103,47 @@ public class FibLib implements ModInitializer {
 		 */
 		public static boolean contains(BlockState state) {
 			return FIBS.containsKey(state);
+		}
+	}
+
+	public static class Items {
+		private static final Map<Item, ItemFib> FIBS = new HashMap<>();
+
+		/**
+		 * Registers an ItemFib for the specified item.
+		 *
+		 * @param item	item to register for.
+		 * @param fib   the fib itself
+		 */
+		public static void register(Item item, ItemFib fib) {
+			FIBS.put(item, fib);
+			FibLib.log("Registered an ItemFib for %s", item.getTranslationKey());
+		}
+
+		/**
+		 * Returns the result of any fibs on a given BlockState
+		 *
+		 * @param input  the ItemStack block we're inquiring about. Note that because this is passed to a ItemFib, other
+		 *               aspects of ItemStack, like nbt, may be used in determining the output
+		 * @return the result of the fib. This is what the player will get told the item is.
+		 */
+		public static ItemStack get(ItemStack input) {
+			Item inputItem = input.getItem();
+			if (!FIBS.containsKey(inputItem)) return input;
+
+			ItemFib fib = FIBS.get(inputItem);
+
+			return fib.getOutput(input);
+		}
+
+		/**
+		 * Returns whether or not a fib exists for the given item.
+		 *
+		 * @param item the item to inquire about
+		 * @return true if the item has a fib
+		 */
+		public static boolean contains(Item item) {
+			return FIBS.containsKey(item);
 		}
 	}
 }
