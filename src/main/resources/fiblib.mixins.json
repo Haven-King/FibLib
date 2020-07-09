@@ -19,6 +19,7 @@
     "blocks.packets.chunkdata.IdListPaletteFibber",
     "blocks.packets.chunkdata.PalettedContainerFibber",
     "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin",
+    "items.inventoryHotfixes",
     "items.packets.EntityEquipmentUpdateFibber",
     "items.packets.EntityTrackerUpdateFibber",
     "items.packets.InventoryFibber",
