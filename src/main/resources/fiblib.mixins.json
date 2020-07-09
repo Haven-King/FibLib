@@ -4,6 +4,7 @@
   "package": "dev.hephaestus.fiblib.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PacketFibber",
     "blocks.ChunkMixin",
     "blocks.ServerChunkManagerMixin",
     "blocks.ServerWorldMixin",
@@ -18,9 +19,10 @@
     "blocks.packets.chunkdata.IdListPaletteFibber",
     "blocks.packets.chunkdata.PalettedContainerFibber",
     "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin",
+    "items.packets.EntityEquipmentUpdateFibber",
     "items.packets.EntityTrackerUpdateFibber",
     "items.packets.InventoryFibber",
-    "PacketFibber"
+    "items.packets.SlotUpdateFibber"
   ],
   "client": [
   ],
