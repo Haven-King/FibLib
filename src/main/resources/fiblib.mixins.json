@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "blocks.ChunkMixin",
-    "blocks.PacketFibber",
     "blocks.ServerChunkManagerMixin",
     "blocks.ServerWorldMixin",
     "blocks.packets.BlockUpdateFibber",
@@ -18,7 +17,10 @@
     "blocks.packets.chunkdata.ChunkSectionFibber",
     "blocks.packets.chunkdata.IdListPaletteFibber",
     "blocks.packets.chunkdata.PalettedContainerFibber",
-    "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin"
+    "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin",
+    "items.packets.EntityTrackerUpdateFibber",
+    "items.packets.InventoryFibber",
+    "PacketFibber"
   ],
   "client": [
   ],

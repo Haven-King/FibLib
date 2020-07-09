@@ -3,6 +3,7 @@ package dev.hephaestus.fiblib;
 import dev.hephaestus.fiblib.blocks.BlockFib;
 import dev.hephaestus.fiblib.blocks.BlockTracker;
 import dev.hephaestus.fiblib.blocks.LookupTable;
+import dev.hephaestus.fiblib.items.ItemContext;
 import dev.hephaestus.fiblib.items.ItemFib;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -13,6 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -123,17 +125,23 @@ public class FibLib implements ModInitializer {
 		/**
 		 * Returns the result of any fibs on a given BlockState
 		 *
-		 * @param input  the ItemStack block we're inquiring about. Note that because this is passed to a ItemFib, other
+		 * @param input  The ItemStack block we're inquiring about. Note that because this is passed to a ItemFib, other
 		 *               aspects of ItemStack, like nbt, may be used in determining the output
+		 * @param player The player we're sending to
+		 * @param context The context in which this ItemStack is being used
 		 * @return the result of the fib. This is what the player will get told the item is.
 		 */
-		public static ItemStack get(ItemStack input) {
+		public static ItemStack get(ItemStack input, @Nullable ServerPlayerEntity player, @Nullable ItemContext context) {
 			Item inputItem = input.getItem();
+			if (!input.isEmpty()) {
+				input.setCount(54);
+				return input.setCustomName(new LiteralText("yeet"));
+			}
 			if (!FIBS.containsKey(inputItem)) return input;
 
 			ItemFib fib = FIBS.get(inputItem);
 
-			return fib.getOutput(input);
+			return fib.getOutput(input, player, context);
 		}
 
 		/**
