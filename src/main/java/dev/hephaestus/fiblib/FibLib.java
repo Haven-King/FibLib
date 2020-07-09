@@ -135,10 +135,10 @@ public class FibLib implements ModInitializer {
 		}
 
 		/**
-		 * Returns the result of any fibs on a given BlockState
+		 * Returns the result of any fibs on a given ItemStack
 		 *
-		 * @param input  The ItemStack block we're inquiring about. Note that because this is passed to a ItemFib, other
-		 *               aspects of ItemStack, like nbt, may be used in determining the output.
+		 * @param input  The ItemStack we're inquiring about. Note that because this is passed to a ItemFib, other
+		 *               aspects of the ItemStack, like nbt, may be used in determining the output.
 		 * @param player The player we're sending to
 		 * @param context The context in which this ItemStack is being used
 		 * @return the result of the fib. This is what the player will get told the item is.
