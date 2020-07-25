@@ -5,8 +5,8 @@
   "plugin": "dev.hephaestus.fiblib.mixin.blocks.VolatileMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PacketFibber",
     "blocks.ChunkMixin",
-    "blocks.PacketFibber",
     "blocks.ServerChunkManagerMixin",
     "blocks.ServerWorldMixin",
     "blocks.packets.BlockUpdateFibber",
@@ -20,7 +20,12 @@
     "blocks.packets.chunkdata.IdListPaletteFibber",
     "blocks.packets.chunkdata.LithiumHashPaletteFibber",
     "blocks.packets.chunkdata.PalettedContainerFibber",
-    "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin"
+    "blocks.packets.chunkdata.ThreadedAnvilChunkStorageMixin",
+    "items.inventoryHotfixes",
+    "items.packets.EntityEquipmentUpdateFibber",
+    "items.packets.EntityTrackerUpdateFibber",
+    "items.packets.InventoryFibber",
+    "items.packets.SlotUpdateFibber"
   ],
   "client": [
   ],

@@ -1,10 +1,13 @@
-package dev.hephaestus.fiblib.mixin.blocks;
+package dev.hephaestus.fiblib.mixin;
 
 import dev.hephaestus.fiblib.Fibber;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerActionResponseS2CPacket;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,12 +23,10 @@ public abstract class PacketFibber {
 
     @Shadow public abstract void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> genericFutureListener);
 
-    @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"))
     public void fixPackets(Packet<?> packet, CallbackInfo ci) {
-        if (/*packet instanceof BlockActionS2CPacket ||*/ packet instanceof PlayerActionResponseS2CPacket || packet instanceof BlockUpdateS2CPacket || packet instanceof ChunkDeltaUpdateS2CPacket) {
+        if (packet instanceof Fibber) {
             Fibber.fix(packet, player);
-            this.sendPacket(packet, null);
-            ci.cancel();
         }
     }
 }
