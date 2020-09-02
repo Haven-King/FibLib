@@ -14,9 +14,6 @@ repositories {
 	maven {
 		url = "https://www.cursemaven.com"
 	}
-	maven {
-		url  "https://dl.bintray.com/ladysnake/libs"
-	}
 }
 
 dependencies {
