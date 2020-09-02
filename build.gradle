@@ -11,9 +11,7 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven {
-		url = "https://www.cursemaven.com"
-	}
+	mavenLocal()
 }
 
 dependencies {
@@ -24,7 +22,7 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "curse.maven:lithium:2996131"
+	modApi "me.jellysquid.mods:lithium-fabric:0.5.4-SNAPSHOT"
 }
 
 processResources {

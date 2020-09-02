@@ -35,11 +35,11 @@ public class BlockTracker {
     }
 
     public LongSet tracked(BlockState state) {
-        return trackedBlocks.getOrDefault(Block.STATE_IDS.getId(state), new LongOpenHashSet());    }
+        return trackedBlocks.getOrDefault(Block.STATE_IDS.getRawId(state), new LongOpenHashSet());    }
 
     public void track(BlockState state, BlockPos pos) {
         long posLong = pos.asLong();
-        Integer id = Block.STATE_IDS.getId(state);
+        Integer id = Block.STATE_IDS.getRawId(state);
 
         if (FibLib.Blocks.contains(state)) {
             trackedBlocks.putIfAbsent(id, new LongOpenHashSet());
@@ -50,7 +50,7 @@ public class BlockTracker {
     }
 
     public void remove(BlockState state, BlockPos pos) {
-        LongSet set = trackedBlocks.getOrDefault(Block.STATE_IDS.getId(state), new LongOpenHashSet());
+        LongSet set = trackedBlocks.getOrDefault(Block.STATE_IDS.getRawId(state), new LongOpenHashSet());
         set.remove(pos.asLong());
     }
 

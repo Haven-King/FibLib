@@ -5,6 +5,7 @@ import dev.hephaestus.fiblib.blocks.LookupTable;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +40,7 @@ public class FibLib implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		FibLib.log("Initialized");
+		FibLib.Blocks.register(new BlockFib(net.minecraft.block.Blocks.GRASS_BLOCK, net.minecraft.block.Blocks.GLOWSTONE));
 	}
 
 	public static class Blocks {

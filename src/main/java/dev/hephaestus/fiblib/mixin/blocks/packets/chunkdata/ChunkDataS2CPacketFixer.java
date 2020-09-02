@@ -1,8 +1,7 @@
 package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import com.google.common.collect.Lists;
-import dev.hephaestus.fiblib.Fibber;
-import dev.hephaestus.fiblib.blocks.ChunkDataFibber;
+import dev.hephaestus.fiblib.blocks.Fixable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -13,7 +12,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.source.BiomeArray;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(ChunkDataS2CPacket.class)
-public abstract class ChunkDataS2CPacketFibber implements ChunkDataFibber {
+public abstract class ChunkDataS2CPacketFixer implements Fixable {
     @Shadow private int chunkX;
     @Shadow private int chunkZ;
     @Shadow private int verticalStripBitmask;
     @Shadow private CompoundTag heightmaps;
-    @Shadow private BiomeArray biomeArray;
+    @Shadow private int[] biomeArray;
     @Shadow private byte[] data;
     @Shadow private List<CompoundTag> blockEntities;
     @Shadow private boolean isFullChunk;
@@ -65,12 +63,11 @@ public abstract class ChunkDataS2CPacketFibber implements ChunkDataFibber {
         }
 
         if (this.isFullChunk && chunk.getBiomeArray() != null) {
-            this.biomeArray = chunk.getBiomeArray().copy();
+            this.biomeArray = chunk.getBiomeArray().toIntArray();
         }
 
         this.data = new byte[this.getDataSize(chunk, includedSectionsMask)];
         this.verticalStripBitmask = this.writeData(new PacketByteBuf(this.getWriteBuffer()), chunk, includedSectionsMask);
-
 
         this.blockEntities = Lists.newArrayList();
         Iterator<Map.Entry<BlockPos, BlockEntity>> blockEntities = chunk.getBlockEntities().entrySet().iterator();
@@ -96,6 +93,6 @@ public abstract class ChunkDataS2CPacketFibber implements ChunkDataFibber {
     @Inject(method = "getDataSize", at = @At(value = "HEAD"))
     public void fixDataSize(WorldChunk chunk, int includedSectionsMark, CallbackInfoReturnable<Integer> cir) {
         for (ChunkSection chunkSection : chunk.getSectionArray())
-            Fibber.fix(chunkSection, player);
+            Fixable.fix(chunkSection, player);
     }
 }

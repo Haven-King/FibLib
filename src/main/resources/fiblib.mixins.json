@@ -17,7 +17,7 @@
     "blocks.packets.PlayerActionFibber",
     "blocks.packets.chunkdata.ArrayPaletteFibber",
     "blocks.packets.chunkdata.BiMapPaletteFibber",
-    "blocks.packets.chunkdata.ChunkDataS2CPacketFibber",
+    "blocks.packets.chunkdata.ChunkDataS2CPacketFixer",
     "blocks.packets.chunkdata.ChunkDeltaFibber",
     "blocks.packets.chunkdata.ChunkHolderFibber",
     "blocks.packets.chunkdata.ChunkSectionFibber",

@@ -1,6 +1,6 @@
 package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
-import dev.hephaestus.fiblib.blocks.ChunkDataFibber;
+import dev.hephaestus.fiblib.blocks.Fixable;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.network.Packet;
@@ -31,7 +31,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
     public void fixPackets(ServerPlayerEntity serverPlayerEntity_1, Packet<?>[] packets_1, WorldChunk worldChunk_1, CallbackInfo ci) {
         if (packets_1[0] == null) {
             packets_1[0] = new ChunkDataS2CPacket();
-            ChunkDataFibber.fix(packets_1[0]).fix(worldChunk_1, 65535, serverPlayerEntity_1);
+            Fixable.fix(packets_1[0]).fix(worldChunk_1, 65535, serverPlayerEntity_1);
             // this new boolean is apparently an "is invalid" flag.
             packets_1[1] = new LightUpdateS2CPacket(worldChunk_1.getPos(), this.serverLightingProvider, true);
         }

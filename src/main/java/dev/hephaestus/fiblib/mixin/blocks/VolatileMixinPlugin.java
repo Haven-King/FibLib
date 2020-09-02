@@ -20,8 +20,8 @@ public class VolatileMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (targetClassName.equals("dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata.LithiumHashPaletteFibber") && !FabricLoader.getInstance().isModLoaded("lithium")) {
-			return false;
+		if (mixinClassName.equals("dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata.LithiumHashPaletteFibber")) {
+			return FabricLoader.getInstance().isModLoaded("lithium");
 		}
 
 		return true;
