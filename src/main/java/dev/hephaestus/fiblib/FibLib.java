@@ -1,16 +1,11 @@
 package dev.hephaestus.fiblib;
 
 import dev.hephaestus.fiblib.blocks.BlockFib;
-import dev.hephaestus.fiblib.blocks.BlockTracker;
 import dev.hephaestus.fiblib.blocks.LookupTable;
-import nerdhub.cardinal.components.api.ComponentRegistry;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.event.ChunkComponentCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,13 +42,6 @@ public class FibLib implements ModInitializer {
 	}
 
 	public static class Blocks {
-		public static final ComponentType<BlockTracker> TRACKER =
-				ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("fiblib:blocks.tracker"), BlockTracker.class);
-
-		static {
-			ChunkComponentCallback.EVENT.register((chunk, components) -> components.put(TRACKER, new BlockTracker(chunk)));
-		}
-
 		private static final LookupTable LOOKUPS = new LookupTable();
 
 		private static final HashMap<BlockState, BlockFib> FIBS = new HashMap<>();

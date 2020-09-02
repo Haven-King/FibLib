@@ -3,9 +3,8 @@ package dev.hephaestus.fiblib.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
 
-public abstract class BlockFib {
+public class BlockFib {
     private final BlockState input;
     private final BlockState output;
 
@@ -20,7 +19,6 @@ public abstract class BlockFib {
         this.output = output.getDefaultState();
     }
 
-
     public BlockState getOutput(BlockState inputState) {
         return inputState == this.input ? this.output : inputState;
     }
@@ -34,7 +32,7 @@ public abstract class BlockFib {
         return this.input;
     }
 
-    protected abstract boolean condition(ServerPlayerEntity player);
+    protected boolean condition(ServerPlayerEntity player) { return true;}
 
     /**
      * @return does not fib on block update (i.e. player right click)

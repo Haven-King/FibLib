@@ -3,9 +3,6 @@ package dev.hephaestus.fiblib.blocks;
 import dev.hephaestus.fiblib.FibLib;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.Component;
-import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class BlockTracker implements CopyableComponent {
+public class BlockTracker {
     public final Chunk chunk;
 
     private final HashMap<Integer, LongSet> trackedBlocks = new HashMap<>();
@@ -80,7 +77,6 @@ public class BlockTracker implements CopyableComponent {
         }
     }
 
-    @Override
     public void fromTag(CompoundTag compoundTag) {
         if (compoundTag.contains("TrackedBlocks", 10)) {
             CompoundTag trackedStates = compoundTag.getCompound("TrackedBlocks");
@@ -97,7 +93,6 @@ public class BlockTracker implements CopyableComponent {
         }
     }
 
-    @Override
     public CompoundTag toTag(CompoundTag compoundTag) {
         CompoundTag trackedStates = new CompoundTag();
         for (Map.Entry<Integer, LongSet> entry : tracked().entrySet()) {
@@ -117,20 +112,7 @@ public class BlockTracker implements CopyableComponent {
         return compoundTag;
     }
 
-    @Override
-    public void copyFrom(Component other) {
-        BlockTracker component;
-        if (other.getClass() == BlockTracker.class && (component = ((BlockTracker)other)).chunk.getPos() == chunk.getPos()) {
-            for (Map.Entry<Integer, LongSet> e : component.trackedBlocks.entrySet()) {
-                for (Long l : e.getValue()) {
-                    track(e.getKey(), l);
-                }
-            }
-        }
-    }
-
-    @Override
-    public ComponentType getComponentType() {
-        return FibLib.Blocks.TRACKER;
+    public interface Provider {
+        BlockTracker getBlockTracker();
     }
 }
