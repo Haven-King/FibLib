@@ -40,7 +40,6 @@ public class FibLib implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		FibLib.log("Initialized");
-		FibLib.Blocks.register(new BlockFib(net.minecraft.block.Blocks.GRASS_BLOCK, net.minecraft.block.Blocks.GLOWSTONE));
 	}
 
 	public static class Blocks {

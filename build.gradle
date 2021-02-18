@@ -20,9 +20,8 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	modApi "me.jellysquid.mods:lithium-fabric:0.5.4-SNAPSHOT"
+	modCompileOnly "me.jellysquid.mods:lithium:0.6.3-SNAPSHOT"
+	modCompileOnly "me.jellysquid.mods:lithium-api:0.6.3-SNAPSHOT"
 }
 
 processResources {
@@ -71,9 +70,10 @@ publishing {
 	}
 	repositories {
 		maven {
-			url 's3://hephaestus.dev/release'
-			authentication {
-				awsIm(AwsImAuthentication)
+			url 'https://maven.quiltmc.org/repository/release/'
+			credentials {
+				username 'GitHub'
+				password '\\H:/xW8;2)zbC$V:'
 			}
 		}
 	}
