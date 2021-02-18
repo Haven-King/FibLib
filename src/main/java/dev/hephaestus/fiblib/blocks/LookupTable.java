@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class LookupTable {
     private final Collection<ServerPlayerEntity> updated = new HashSet<>();
@@ -39,17 +40,24 @@ public class LookupTable {
     public int getVersion() { return version; }
 
     public void update() {
-        playerLookupTable.entrySet().removeIf(entry -> entry.getKey().right.isDisconnected());
         updated.clear();
 
-        for (ImmutablePair<BlockFib, ServerPlayerEntity> key :  playerLookupTable.keySet()) {
-            BlockState newState = key.left.getOutput(key.left.getInput(), key.right);
-            BlockState oldState = playerLookupTable.get(key);
+        Iterator<ImmutablePair<BlockFib, ServerPlayerEntity>> it = playerLookupTable.keySet().iterator();
 
-            if (newState != oldState) {
-                playerLookupTable.put(key, newState);
-                updated.add(key.right);
-                ++updates;
+        while (it.hasNext()) {
+            ImmutablePair<BlockFib, ServerPlayerEntity> key = it.next();
+
+            if (key.right.isDisconnected() || key.right.removed) {
+                it.remove();
+            } else {
+                BlockState newState = key.left.getOutput(key.left.getInput(), key.right);
+                BlockState oldState = playerLookupTable.get(key);
+
+                if (newState != oldState) {
+                    playerLookupTable.put(key, newState);
+                    updated.add(key.right);
+                    ++updates;
+                }
             }
         }
 

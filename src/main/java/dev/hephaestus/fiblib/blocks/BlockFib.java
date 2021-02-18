@@ -3,31 +3,57 @@ package dev.hephaestus.fiblib.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockFib {
+import java.util.function.Predicate;
+
+public class BlockFib implements Predicate<ServerPlayerEntity> {
     private final BlockState input;
     private final BlockState output;
+    private final boolean soft;
+    private final Predicate<ServerPlayerEntity> predicate;
 
-    public BlockFib(BlockState input, BlockState output) {
+    public BlockFib(BlockState input, BlockState output, @Nullable Predicate<ServerPlayerEntity> predicate, boolean soft) {
         this.input = input;
         this.output = output;
+        this.predicate = predicate == null ? this::condition : predicate;
+        this.soft = soft;
+    }
+
+    public BlockFib(Block input, Block output, @Nullable Predicate<ServerPlayerEntity> predicate, boolean soft) {
+        this(input.getDefaultState(), output.getDefaultState(), predicate, soft);
+    }
+
+    public BlockFib(BlockState input, BlockState output, boolean soft) {
+        this(input, output, null, soft);
+    }
+
+    public BlockFib(Block input, Block output, boolean soft) {
+        this(input, output, null, soft);
+    }
+
+    public BlockFib(BlockState input, BlockState output, @Nullable Predicate<ServerPlayerEntity> predicate) {
+        this(input, output, predicate, false);
+    }
+
+    public BlockFib(Block input, Block output, @Nullable Predicate<ServerPlayerEntity> predicate) {
+        this(input.getDefaultState(), output.getDefaultState(), predicate, false);
+    }
+
+    public BlockFib(BlockState input, BlockState output) {
+        this(input, output, null, false);
     }
 
     public BlockFib(Block input, Block output) {
-        this.input = input.getDefaultState();
-        this.output = output.getDefaultState();
+        this(input, output, null, false);
     }
 
     public BlockState getOutput(BlockState inputState) {
         return inputState == this.input ? this.output : inputState;
     }
 
-    public BlockState getOutput(BlockState inputState, ServerPlayerEntity player) {
-        boolean bl1 = player != null;
-        boolean bl2 = inputState == this.input;
-        boolean bl3 = condition(player);
-
-        return bl1 && bl2 && bl3 ? getOutput(inputState) : inputState;
+    public BlockState getOutput(BlockState inputState, @Nullable ServerPlayerEntity player) {
+        return player != null && inputState == this.input && test(player) ? getOutput(inputState) : inputState;
     }
 
     public BlockState getInput() {
@@ -40,6 +66,11 @@ public class BlockFib {
      * @return does not fib on block update (i.e. player right click)
      */
 	public boolean isSoft() {
-	    return false;
+	    return this.soft;
+    }
+
+    @Override
+    public final boolean test(ServerPlayerEntity playerEntity) {
+        return this.predicate.test(playerEntity);
     }
 }
