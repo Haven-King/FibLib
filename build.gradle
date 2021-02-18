@@ -70,10 +70,9 @@ publishing {
 	}
 	repositories {
 		maven {
-			url 'https://maven.quiltmc.org/repository/release/'
-			credentials {
-				username 'GitHub'
-				password '\\H:/xW8;2)zbC$V:'
+			url 's3://hephaestus.dev/release'
+			authentication {
+				awsIm(AwsImAuthentication)
 			}
 		}
 	}
