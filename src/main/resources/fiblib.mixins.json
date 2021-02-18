@@ -8,6 +8,8 @@
     "blocks.PacketFibber",
     "blocks.ServerChunkManagerMixin",
     "blocks.ServerWorldMixin",
+    "blocks.ChunkReloader",
+    "blocks.TACSAccessor",
     "blocks.chunk.ChunkMixin",
     "blocks.chunk.ChunkSerializerMixin",
     "blocks.chunk.ProtoChunkMixin",

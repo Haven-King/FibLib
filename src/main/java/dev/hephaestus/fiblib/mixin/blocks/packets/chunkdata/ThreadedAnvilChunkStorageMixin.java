@@ -1,13 +1,10 @@
 package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
 
 import dev.hephaestus.fiblib.blocks.Fixable;
-import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.network.packet.s2c.play.LightUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerLightingProvider;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.world.chunk.WorldChunk;
@@ -21,11 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ThreadedAnvilChunkStorage.class)
 public abstract class ThreadedAnvilChunkStorageMixin {
     @Shadow @Final private ServerLightingProvider serverLightingProvider;
-    @Shadow @Final private LongSet loadedChunks;
-
-    @Shadow @Final private Long2ObjectLinkedOpenHashMap<ChunkHolder> currentChunkHolders;
-
-    @Shadow protected abstract Iterable<ChunkHolder> entryIterator();
 
     @Inject(method = "sendChunkDataPackets", at = @At("HEAD"))
     public void fixPackets(ServerPlayerEntity serverPlayerEntity_1, Packet<?>[] packets_1, WorldChunk worldChunk_1, CallbackInfo ci) {

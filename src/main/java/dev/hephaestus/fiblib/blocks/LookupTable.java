@@ -1,13 +1,19 @@
 package dev.hephaestus.fiblib.blocks;
 
 import dev.hephaestus.fiblib.FibLib;
+import dev.hephaestus.fiblib.mixin.blocks.ChunkReloader;
+import dev.hephaestus.fiblib.mixin.blocks.TACSAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class LookupTable {
+    private final Collection<ServerPlayerEntity> updated = new HashSet<>();
     private int updates = 0;
     private int version = 0;
 
@@ -16,7 +22,7 @@ public class LookupTable {
 
     private void put(ImmutablePair<BlockFib, ServerPlayerEntity> key, BlockState input) {
         BlockState newState = key.left.getOutput(input, key.right);
-        BlockState oldState = playerLookupTable.put(key, newState);
+        playerLookupTable.put(key, newState);
     }
 
     public BlockState get(BlockFib fib, BlockState input, ServerPlayerEntity player) {
@@ -33,14 +39,23 @@ public class LookupTable {
     public int getVersion() { return version; }
 
     public void update() {
+        playerLookupTable.entrySet().removeIf(entry -> entry.getKey().right.isDisconnected());
+        updated.clear();
+
         for (ImmutablePair<BlockFib, ServerPlayerEntity> key :  playerLookupTable.keySet()) {
             BlockState newState = key.left.getOutput(key.left.getInput(), key.right);
             BlockState oldState = playerLookupTable.get(key);
 
             if (newState != oldState) {
                 playerLookupTable.put(key, newState);
+                updated.add(key.right);
                 ++updates;
             }
+        }
+
+        for (ServerPlayerEntity player : updated) {
+            ThreadedAnvilChunkStorage TACS = ((TACSAccessor) player.getServerWorld().getChunkManager()).getThreadedAnvilChunkStorage();
+            ((ChunkReloader) TACS).reloadChunks(player, true);
         }
 
         if (updates > 0) {

@@ -8,7 +8,6 @@ public class BlockFib {
     private final BlockState input;
     private final BlockState output;
 
-
     public BlockFib(BlockState input, BlockState output) {
         this.input = input;
         this.output = output;
@@ -24,9 +23,12 @@ public class BlockFib {
     }
 
     public BlockState getOutput(BlockState inputState, ServerPlayerEntity player) {
-        return player != null && inputState == this.input && condition(player) ? getOutput(inputState) : inputState;
-    }
+        boolean bl1 = player != null;
+        boolean bl2 = inputState == this.input;
+        boolean bl3 = condition(player);
 
+        return bl1 && bl2 && bl3 ? getOutput(inputState) : inputState;
+    }
 
     public BlockState getInput() {
         return this.input;
