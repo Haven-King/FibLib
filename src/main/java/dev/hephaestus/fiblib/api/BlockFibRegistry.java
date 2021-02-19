@@ -13,13 +13,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockFibRegistry {
+public final class BlockFibRegistry {
     private static final Multimap<BlockState, BlockFib> STATIC_BLOCK_FIBS = HashMultimap.create();
     private static final Multimap<BlockState, BlockFib> BLOCK_FIBS = HashMultimap.create();
     private static final Map<Identifier, BlockFib> DYNAMIC_BLOCK_FIBS = new HashMap<>();
 
     static {
         FibLib.log("Initialized BlockFibRegistry");
+    }
+
+    private BlockFibRegistry() {
     }
 
     /**
