@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.blocks;
+package dev.hephaestus.fiblib.mixin;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;

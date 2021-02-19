@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.blocks;
+package dev.hephaestus.fiblib.mixin;
 
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
@@ -20,7 +20,7 @@ public class VolatileMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (mixinClassName.equals("dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata.LithiumHashPaletteFibber")) {
+		if (targetClassName.startsWith("me.jellysquid.mods.lithium")) {
 			return FabricLoader.getInstance().isModLoaded("lithium");
 		}
 

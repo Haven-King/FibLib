@@ -14,9 +14,6 @@
   "icon": "assets/fiblib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "dev.hephaestus.fiblib.FibLib"
-    ]
   },
   "mixins": [
     "fiblib.mixins.json"

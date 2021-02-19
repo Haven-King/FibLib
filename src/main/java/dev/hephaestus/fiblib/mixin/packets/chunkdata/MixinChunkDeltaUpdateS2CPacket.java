@@ -1,22 +1,21 @@
-package dev.hephaestus.fiblib.mixin.blocks.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.packets.chunkdata;
 
-import dev.hephaestus.fiblib.FibLib;
-import dev.hephaestus.fiblib.blocks.Fixable;
+import dev.hephaestus.fiblib.api.BlockFibRegistry;
+import dev.hephaestus.fiblib.impl.Fixable;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ChunkDeltaUpdateS2CPacket.class)
-public class ChunkDeltaFibber implements Fixable {
+public class MixinChunkDeltaUpdateS2CPacket implements Fixable {
     @Shadow private BlockState[] blockStates;
 
     @Override
-    public void fix(WorldChunk chunk, int includedSectionsMask, ServerPlayerEntity player) {
+    public void fix(ServerPlayerEntity player) {
         for (int i = 0; i < this.blockStates.length; ++i) {
-            this.blockStates[i] = FibLib.Blocks.get(this.blockStates[i], player, false);
+            this.blockStates[i] = BlockFibRegistry.getBlockState(this.blockStates[i], player);
         }
     }
 }
