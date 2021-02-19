@@ -14,6 +14,22 @@ public interface BlockFib {
     Iterable<BlockState> getInputs();
     BlockState getOutput(BlockState inputState, @Nullable ServerPlayerEntity playerEntity);
 
+    static Builder builder(Block inputBlock, Block outputBlock) {
+        return new Builder(inputBlock, outputBlock);
+    }
+
+    static Builder builder(BlockState inputState, BlockState outputState) {
+        return new Builder(inputState, outputState);
+    }
+
+    static Builder builder(Block inputBlock, BlockState outputState) {
+        return new Builder(inputBlock, outputState);
+    }
+
+    static Builder builder(BlockState inputState, Block outputBlock) {
+        return new Builder(inputState, outputBlock);
+    }
+
     class Builder {
         private final Function<@Nullable Predicate<@Nullable ServerPlayerEntity>, BlockFib> constructor;
         private Predicate<@Nullable ServerPlayerEntity> condition = null;
