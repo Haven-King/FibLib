@@ -1,5 +1,6 @@
 package dev.hephaestus.fiblib.impl;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import dev.hephaestus.fiblib.api.BlockFib;
 import net.minecraft.block.BlockState;
@@ -27,7 +28,7 @@ public class BlockStateFib implements BlockFib {
     }
 
     @Override
-    public final Iterable<BlockState> getInputs() {
+    public final ImmutableCollection<BlockState> getInputs() {
         return this.inputStates;
     }
 

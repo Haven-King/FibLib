@@ -1,5 +1,6 @@
 package dev.hephaestus.fiblib.api;
 
+import com.google.common.collect.ImmutableCollection;
 import dev.hephaestus.fiblib.impl.BlockFibImpl;
 import dev.hephaestus.fiblib.impl.BlockStateFib;
 import net.minecraft.block.Block;
@@ -28,7 +29,7 @@ public interface BlockFib {
      *
      * This list should not change throughout a fibs life.
      */
-    Iterable<BlockState> getInputs();
+    ImmutableCollection<BlockState> getInputs();
 
     /**
      * Gets the result of this fib when applied to the given state for the given player.
