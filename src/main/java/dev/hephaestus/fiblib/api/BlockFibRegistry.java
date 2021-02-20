@@ -63,13 +63,12 @@ public final class BlockFibRegistry {
      * @param playerEntity the player who we will be fibbing to
      * @return the result of the fib.
      */
-    public static BlockState getBlockState(BlockState inputState, @Nullable ServerPlayerEntity playerEntity) {
+    public static BlockState getBlockState(BlockState inputState, ServerPlayerEntity playerEntity) {
         if (playerEntity != null && playerEntity.getServer() != null) {
             return ((LookupTable) playerEntity.getServer()).get(inputState, playerEntity);
-        } else {
-            BlockFib blockFib = getBlockFib(inputState, playerEntity);
-            return blockFib == null ? inputState : blockFib.getOutput(inputState, playerEntity);
         }
+
+        return inputState;
     }
 
     /**
@@ -80,7 +79,7 @@ public final class BlockFibRegistry {
      * @param playerEntity the player who we will be fibbing to
      * @return the resulting fib.
      */
-    public static @Nullable BlockFib getBlockFib(BlockState inputState, @Nullable ServerPlayerEntity playerEntity) {
+    public static @Nullable BlockFib getBlockFib(BlockState inputState, ServerPlayerEntity playerEntity) {
         for (BlockFib blockFib : BLOCK_FIBS.get(inputState)) {
             if (blockFib.getOutput(inputState, playerEntity) != inputState) {
                 return blockFib;
@@ -122,5 +121,17 @@ public final class BlockFibRegistry {
     public static void reset() {
         BLOCK_FIBS.clear();
         BLOCK_FIBS.putAll(STATIC_BLOCK_FIBS);
+    }
+
+    public static BlockState getBlockStateLenient(BlockState state, ServerPlayerEntity player) {
+        for (BlockFib fib : BLOCK_FIBS.get(state)) {
+            BlockState newState;
+
+            if (!fib.isLenient() && ((newState = fib.getOutput(state, player)) != state)) {
+                return newState;
+            }
+        }
+
+        return state;
     }
 }

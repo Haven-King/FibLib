@@ -1,5 +1,6 @@
 package dev.hephaestus.fiblib.mixin.packets;
 
+import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import dev.hephaestus.fiblib.impl.Fixable;
 import net.minecraft.block.BlockState;
@@ -14,6 +15,6 @@ public class MixinPlayerActionResponseS2CPacket implements Fixable {
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        this.state = BlockFibRegistry.getBlockState(state, player);
+        this.state = BlockFibRegistry.getBlockStateLenient(this.state, player);
     }
 }

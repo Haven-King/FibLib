@@ -14,6 +14,6 @@ public class MixinBlockUpdateS2CPacket implements Fixable {
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        this.state = BlockFibRegistry.getBlockState(this.state, player);
+        this.state = BlockFibRegistry.getBlockStateLenient(this.state, player);
     }
 }

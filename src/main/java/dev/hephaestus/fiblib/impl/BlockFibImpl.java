@@ -12,20 +12,27 @@ import java.util.function.Predicate;
 public class BlockFibImpl implements BlockFib {
     private final Block inputBlock;
     private final BlockState outputState;
+    private final boolean lenient;
     private final ImmutableList<BlockState> inputs;
 
-    public BlockFibImpl(Block inputBlock, BlockState outputState) {
+    public BlockFibImpl(Block inputBlock, BlockState outputState, boolean lenient) {
         this.inputBlock = inputBlock;
         this.outputState = outputState;
         this.inputs = inputBlock.getStateManager().getStates();
+        this.lenient = lenient;
     }
 
-    public BlockFibImpl(Block inputBlock, Block outputBlock) {
-        this(inputBlock, outputBlock.getDefaultState());
+    public BlockFibImpl(Block inputBlock, Block outputBlock, boolean lenient) {
+        this(inputBlock, outputBlock.getDefaultState(), lenient);
     }
 
     @Override
-    public Iterable<BlockState> getInputs() {
+    public final boolean isLenient() {
+        return this.lenient;
+    }
+
+    @Override
+    public final Iterable<BlockState> getInputs() {
         return this.inputs;
     }
 
@@ -37,12 +44,12 @@ public class BlockFibImpl implements BlockFib {
     public static class Conditional extends BlockFibImpl {
         private final Predicate<@Nullable ServerPlayerEntity> condition;
 
-        public Conditional(Block inputBlock, Block outputBlock, Predicate<@Nullable ServerPlayerEntity> condition) {
-            this(inputBlock, outputBlock.getDefaultState(), condition);
+        public Conditional(Block inputBlock, Block outputBlock, boolean lenient, Predicate<@Nullable ServerPlayerEntity> condition) {
+            this(inputBlock, outputBlock.getDefaultState(), lenient, condition);
         }
 
-        public Conditional(Block inputBlock, BlockState outputState, Predicate<@Nullable ServerPlayerEntity> condition) {
-            super(inputBlock, outputState);
+        public Conditional(Block inputBlock, BlockState outputState, boolean lenient, Predicate<@Nullable ServerPlayerEntity> condition) {
+            super(inputBlock, outputState, lenient);
             this.condition = condition;
         }
 
