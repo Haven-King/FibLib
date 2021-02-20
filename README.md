@@ -1,5 +1,5 @@
 ![banner](https://raw.githubusercontent.com/Hephaestus-Dev/FibLib/master/banner.png "banner")
-# FibLib
+# FibLib ![latest version](https://img.shields.io/github/v/release/Hephaestus-Dev/FibLib)
 This is a library all about lying to your players! 
 
 ## Setup
