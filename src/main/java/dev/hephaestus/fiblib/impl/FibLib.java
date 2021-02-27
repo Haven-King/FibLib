@@ -53,9 +53,8 @@ public class FibLib {
 			if (world != null) {
 				RegistryKey<World> worldRegistryKey = world.getRegistryKey();
 
-				double scale = world.getDimension().getCoordinateScale();
-				int i = MathHelper.floor(player.getX() * scale) >> 4;
-				int j = MathHelper.floor(player.getZ() * scale) >> 4;
+				int i = MathHelper.floor(player.getX()) >> 4;
+				int j = MathHelper.floor(player.getZ()) >> 4;
 				int watchDistance = ((ChunkReloader) TACS).getWatchDistance();
 
 				for (int k = i - watchDistance; k <= i + watchDistance; ++k) {
