@@ -8,6 +8,7 @@ import com.qouteall.immersive_portals.chunk_loading.DimensionalChunkPos;
 import com.qouteall.immersive_portals.ducks.IEThreadedAnvilChunkStorage;
 import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
+import dev.hephaestus.fiblib.impl.FibLib;
 import dev.hephaestus.fiblib.impl.LookupTable;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
@@ -81,31 +82,7 @@ public class MixinMinecraftServer implements LookupTable {
 
         if (!updated.isEmpty()) {
             for (ServerPlayerEntity player : updated) {
-                ThreadedAnvilChunkStorage TACS = ((TACSAccessor) player.getServerWorld().getChunkManager())
-                        .getThreadedAnvilChunkStorage();
-
-
-                if (FabricLoader.getInstance().isModLoaded("immersive_portals")) {
-                    CDSMAccessor cdsm = (CDSMAccessor) Global.chunkDataSyncManager;
-
-
-                    double scale = player.world.getDimension().getCoordinateScale();
-                    int i = MathHelper.floor(player.getX() * scale) >> 4;
-                    int j = MathHelper.floor(player.getZ() * scale) >> 4;
-                    int watchDistance = ((ChunkReloader) TACS).getWatchDistance();
-
-
-
-                    for(int k = i - watchDistance; k <= i + watchDistance; ++k) {
-                        for(int l = j - watchDistance; l <= j + watchDistance; ++l) {
-                            DimensionalChunkPos chunkPos = new DimensionalChunkPos(player.world.getRegistryKey(), k, l);
-                            cdsm.invokeSendChunkDataPacketNow(player, chunkPos, (IEThreadedAnvilChunkStorage) TACS);
-                        }
-                    }
-                } else {
-
-                    ((ChunkReloader) TACS).reloadChunks(player, true);
-                }
+                FibLib.resendChunks(player);
             }
 
             updated.clear();
