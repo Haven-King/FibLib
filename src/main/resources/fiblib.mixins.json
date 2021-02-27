@@ -5,8 +5,9 @@
   "plugin": "dev.hephaestus.fiblib.mixin.VolatileMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinMinecraftServer",
+    "CDSMAccessor",
     "ChunkReloader",
+    "MixinMinecraftServer",
     "MixinServerPlayNetworkHandler",
     "TACSAccessor",
     "packets.MixinBlockUpdateS2CPacket",
@@ -14,6 +15,7 @@
     "packets.chunkdata.MixinArrayPalette",
     "packets.chunkdata.MixinBiMapPalette",
     "packets.chunkdata.MixinChunkDataS2CPacket",
+    "packets.chunkdata.MixinChunkDataSyncManager",
     "packets.chunkdata.MixinChunkDeltaUpdateS2CPacket",
     "packets.chunkdata.MixinChunkHolder",
     "packets.chunkdata.MixinChunkSection",

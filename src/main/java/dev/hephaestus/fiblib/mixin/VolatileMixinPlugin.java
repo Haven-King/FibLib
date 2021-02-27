@@ -20,8 +20,15 @@ public class VolatileMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		FabricLoader loader = FabricLoader.getInstance();
 		if (targetClassName.startsWith("me.jellysquid.mods.lithium")) {
-			return FabricLoader.getInstance().isModLoaded("lithium");
+			return loader.isModLoaded("lithium");
+		}
+
+		if (loader.isModLoaded("immersive_portals")) {
+			return !mixinClassName.endsWith("MixinThreadedAnvilChunkStorage");
+		} else if (mixinClassName.startsWith("com.qouteall")) {
+			return false;
 		}
 
 		return true;

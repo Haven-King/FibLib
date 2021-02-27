@@ -3,9 +3,13 @@ package dev.hephaestus.fiblib.mixin;
 import com.mojang.authlib.GameProfileRepository;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.datafixers.DataFixer;
+import com.qouteall.immersive_portals.Global;
+import com.qouteall.immersive_portals.chunk_loading.DimensionalChunkPos;
+import com.qouteall.immersive_portals.ducks.IEThreadedAnvilChunkStorage;
 import dev.hephaestus.fiblib.api.BlockFib;
-import dev.hephaestus.fiblib.impl.LookupTable;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
+import dev.hephaestus.fiblib.impl.LookupTable;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.resource.DataPackSettings;
 import net.minecraft.resource.ResourcePackManager;
@@ -16,6 +20,7 @@ import net.minecraft.server.WorldGenerationProgressListenerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.util.UserCache;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.SaveProperties;
@@ -79,7 +84,28 @@ public class MixinMinecraftServer implements LookupTable {
                 ThreadedAnvilChunkStorage TACS = ((TACSAccessor) player.getServerWorld().getChunkManager())
                         .getThreadedAnvilChunkStorage();
 
-                ((ChunkReloader) TACS).reloadChunks(player, true);
+
+                if (FabricLoader.getInstance().isModLoaded("immersive_portals")) {
+                    CDSMAccessor cdsm = (CDSMAccessor) Global.chunkDataSyncManager;
+
+
+                    double scale = player.world.getDimension().getCoordinateScale();
+                    int i = MathHelper.floor(player.getX() * scale) >> 4;
+                    int j = MathHelper.floor(player.getZ() * scale) >> 4;
+                    int watchDistance = ((ChunkReloader) TACS).getWatchDistance();
+
+
+
+                    for(int k = i - watchDistance; k <= i + watchDistance; ++k) {
+                        for(int l = j - watchDistance; l <= j + watchDistance; ++l) {
+                            DimensionalChunkPos chunkPos = new DimensionalChunkPos(player.world.getRegistryKey(), k, l);
+                            cdsm.invokeSendChunkDataPacketNow(player, chunkPos, (IEThreadedAnvilChunkStorage) TACS);
+                        }
+                    }
+                } else {
+
+                    ((ChunkReloader) TACS).reloadChunks(player, true);
+                }
             }
 
             updated.clear();
