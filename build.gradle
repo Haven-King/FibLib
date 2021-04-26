@@ -34,11 +34,10 @@ dependencies {
 	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modRuntime "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modCompileOnly "me.jellysquid.mods:lithium:0.6.3-SNAPSHOT"
-	modCompileOnly "me.jellysquid.mods:lithium-api:0.6.3-SNAPSHOT"
+	modCompileOnly "com.github.CaffeineMC.lithium-fabric:lithium:mc1.16.5-0.6.4"
+	modCompileOnly "com.github.CaffeineMC.lithium-fabric:lithium-api:mc1.16.5-0.6.4"
 
-	modCompileOnly "com.qouteall:imm_ptl_core:0.80"
-	modCompileOnly "com.qouteall:immersive-portals:0.80"
+	modCompileOnly "com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.90-1.16"
 }
 
 processResources {
