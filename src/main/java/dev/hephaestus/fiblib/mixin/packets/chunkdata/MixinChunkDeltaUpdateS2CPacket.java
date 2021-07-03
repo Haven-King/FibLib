@@ -5,12 +5,13 @@ import dev.hephaestus.fiblib.impl.Fixable;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ChunkDeltaUpdateS2CPacket.class)
 public class MixinChunkDeltaUpdateS2CPacket implements Fixable {
-    @Shadow private BlockState[] blockStates;
+    @Final @Shadow private BlockState[] blockStates;
 
     @Override
     public void fix(ServerPlayerEntity player) {

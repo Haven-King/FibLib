@@ -68,7 +68,7 @@ public class MixinMinecraftServer implements LookupTable {
             Triple<BlockFib, BlockState, UUID> key = it.next();
             ServerPlayerEntity player = this.playerManager.getPlayer(key.getRight());
 
-            if (player == null || player.removed || player.isDisconnected()) {
+            if (player == null || player.isRemoved() || player.isDisconnected()) {
                 it.remove();
             } else {
                 BlockState newState = key.getLeft().getOutput(key.getMiddle(), player);

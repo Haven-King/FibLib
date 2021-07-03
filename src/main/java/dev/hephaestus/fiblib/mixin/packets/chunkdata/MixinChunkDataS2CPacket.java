@@ -17,15 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinChunkDataS2CPacket {
     @Unique private ServerPlayerEntity player = null;
 
-    @Inject(method = "<init>(Lnet/minecraft/world/chunk/WorldChunk;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/WorldChunk;getPos()Lnet/minecraft/util/math/ChunkPos;"))
-    private void captureArgs(WorldChunk chunk, int includedSectionsMask, CallbackInfo ci) {
+    @Inject(method = "<init>(Lnet/minecraft/world/chunk/WorldChunk;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/WorldChunk;getPos()Lnet/minecraft/util/math/ChunkPos;"))
+    private void captureArgs(WorldChunk chunk, CallbackInfo ci) {
         if (FibLib.PLAYER.get() != null) {
             this.player = FibLib.PLAYER.get();
         }
     }
 
     @Inject(method = "getDataSize", at = @At(value = "HEAD"))
-    public void fixDataSize(WorldChunk chunk, int includedSectionsMark, CallbackInfoReturnable<Integer> cir) {
+    public void fixDataSize(WorldChunk chunk, CallbackInfoReturnable<Integer> cir) {
         if (this.player != null) {
             for (ChunkSection chunkSection : chunk.getSectionArray()) {
                 if (chunkSection != null) {
