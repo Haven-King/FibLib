@@ -5,8 +5,10 @@ This is a library all about lying to your players!
 ## Setup
 For setup instructions please see the [FibLib wiki](https://github.com/Hephaestus-Dev/FibLib/wiki).
 
-## Contact Me
-I can be found hanging out on the [Fabric Discord](https://discord.gg/v6v4pMv) as Haven King#2790. Feel free to shoot me a message there if you have any questions.
+## Contact
+You can contact both of us on the [Fabric Discord server!](https://discord.gg/CKpcGqfUFW)
+Contact me: Hypex#1660
+Contact the dev: Haven King#2790
 
 ## License
 This mod is available under the MIT license.
