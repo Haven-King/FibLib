@@ -8,8 +8,8 @@ For setup instructions please see the [wiki.](https://github.com/SkyfallWasTaken
 
 ## Contact
 You can contact both of us on the [Fabric Discord server!](https://discord.gg/CKpcGqfUFW)
-Contact me: Hypex#1660
-Contact the dev: Haven King#2790
+- Contact me: Hypex#1660
+- Contact the dev: Haven King#2790
 
 ## License
 This mod is available under the MIT license.
