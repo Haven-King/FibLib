@@ -4,7 +4,7 @@
 This is a library all about lying to your players! 
 
 ## Setup
-For setup instructions please see the [wiki.](https://github.com/SkyfallWasTaken/FibLib/wiki)
+For setup instructions please see the [wiki.](https://github.com/Haven-King/FibLib/wiki)
 
 ## Contact
 You can contact both of us on the [Fabric Discord server!](https://discord.gg/CKpcGqfUFW)
