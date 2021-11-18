@@ -3,8 +3,8 @@ plugins {
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -21,8 +21,9 @@ repositories {
 		name = 'JitPack'
 		url = 'https://jitpack.io'
 	}
-
-	jcenter()
+	maven { url "https://maven.shedaniel.me/" }
+	maven {url "https://api.modrinth.com/maven"}
+    maven { url "https://www.cursemaven.com"}
 }
 
 dependencies {
@@ -33,12 +34,8 @@ dependencies {
 
 	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modRuntime "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	modCompileOnly "me.jellysquid.mods:lithium:0.6.3-SNAPSHOT"
-	modCompileOnly "me.jellysquid.mods:lithium-api:0.6.3-SNAPSHOT"
-
-	modCompileOnly "com.qouteall:imm_ptl_core:0.80"
-	modCompileOnly "com.qouteall:immersive-portals:0.80"
+    modCompileOnly "maven.modrinth:lithium:mc1.17-0.7.2"
+	modCompileOnly "com.github.qouteall:ImmersivePortalsMod:v0.07-1.17"
 }
 
 processResources {
