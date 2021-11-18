@@ -1,5 +1,6 @@
 package dev.hephaestus.fiblib.mixin.block;
 
+import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,17 +32,22 @@ public abstract class BlockDropMixin {
             cancellable = true)
     private static void beforeDrop(BlockState state, World world, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack stack, CallbackInfo ci) {
         if(world instanceof ServerWorld && entity instanceof ServerPlayerEntity) {
-            BlockState newState = BlockFibRegistry.getBlockState(state, (ServerPlayerEntity) entity);
+            @Nullable BlockFib fib = BlockFibRegistry.getBlockFib(state, (ServerPlayerEntity) entity);
 
-            // If the states do not match (currently being fibbed), cancel the original drop & drop the new loot table instead.
-            if(newState != state) {
-                List<ItemStack> dropped = getDroppedStacks(newState, (ServerWorld) world, pos, blockEntity, entity, stack);
-                if(dropped != null) {
-                    dropped.forEach((itemStack) -> dropStack(world, pos, itemStack));
-                    newState.onStacksDropped((ServerWorld) world, pos, stack);
+            // If the fib requests drop modifications & states do not match (currently being fibbed), cancel the original drop & drop the new loot table instead.
+            if(fib != null) {
+                if(fib.modifiesDrops()) {
+                    BlockState newState = BlockFibRegistry.getBlockState(state, (ServerPlayerEntity) entity);
+                    if(newState != state) {
+                        List<ItemStack> dropped = getDroppedStacks(newState, (ServerWorld) world, pos, blockEntity, entity, stack);
+                        if(dropped != null) {
+                            dropped.forEach((itemStack) -> dropStack(world, pos, itemStack));
+                            newState.onStacksDropped((ServerWorld) world, pos, stack);
+                        }
+
+                        ci.cancel();
+                    }
                 }
-
-                ci.cancel();
             }
         }
     }
