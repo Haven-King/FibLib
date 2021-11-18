@@ -11,6 +11,7 @@
     "MixinServerPlayNetworkHandler",
     "TACSAccessor",
     "block.AbstractBlockStateMixin",
+    "block.BlockDropMixin",
     "packets.MixinBlockUpdateS2CPacket",
     "packets.MixinPlayerActionResponseS2CPacket",
     "packets.chunkdata.MixinArrayPalette",
