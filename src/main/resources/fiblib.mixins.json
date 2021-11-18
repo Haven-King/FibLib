@@ -10,6 +10,7 @@
     "MixinMinecraftServer",
     "MixinServerPlayNetworkHandler",
     "TACSAccessor",
+    "block.AbstractBlockStateMixin",
     "packets.MixinBlockUpdateS2CPacket",
     "packets.MixinPlayerActionResponseS2CPacket",
     "packets.chunkdata.MixinArrayPalette",
