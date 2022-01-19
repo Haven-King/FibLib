@@ -57,7 +57,7 @@ public class BlockFibImpl implements BlockFib {
         }
 
         public Conditional(Block inputBlock, BlockState outputState, boolean lenient, boolean modifiesDrops, Predicate<@Nullable ServerPlayerEntity> condition) {
-            super(inputBlock, outputState, modifiesDrops, lenient);
+            super(inputBlock, outputState, lenient, modifiesDrops);
             this.condition = condition;
         }
 
