@@ -5,6 +5,7 @@ import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.IdList;
+import net.minecraft.util.collection.IndexedIterable;
 import net.minecraft.world.chunk.ArrayPalette;
 import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Final;
@@ -22,13 +23,13 @@ public class MixinArrayPalette<T> implements Fixable {
         this.idList = idList;
     }
 
-    @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getRawId(Ljava/lang/Object;)I"))
-    public int toPacketRedir(IdList<T> idList, T object) {
+    @Redirect(method = "writePacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"))
+    public int toPacketRedir(IndexedIterable<T> instance, T object) {
         return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
     }
 
-    @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getRawId(Ljava/lang/Object;)I"))
-    public int getPacketSizeRedir(IdList<T> idList, T object) {
+    @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"))
+    public int getPacketSizeRedir(IndexedIterable<T> instance, T object) {
         return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
     }
 
