@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ChunkSection.class)
 public class MixinChunkSection implements Fixable {
-    @Mutable @Final @Shadow private PalettedContainer<BlockState> container;
+    @Mutable @Final @Shadow private PalettedContainer<BlockState> blockStateContainer;
 
     @Override
     public void fix(ServerPlayerEntity player) {
-        ((Fixable) container).fix(player);
+        ((Fixable) blockStateContainer).fix(player);
     }
 }

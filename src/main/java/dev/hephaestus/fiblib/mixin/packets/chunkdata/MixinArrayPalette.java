@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @SuppressWarnings("unchecked")
 @Mixin(ArrayPalette.class)
 public class MixinArrayPalette<T> implements Fixable {
-    @Mutable @Final @Shadow private final IdList<T> idList;
-    public MixinArrayPalette(IdList<T> idList) {
+    @Mutable @Final @Shadow private final IndexedIterable<T> idList;
+    public MixinArrayPalette(IndexedIterable<T> idList) {
         this.idList = idList;
     }
 
