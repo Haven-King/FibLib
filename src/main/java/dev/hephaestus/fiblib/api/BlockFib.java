@@ -25,6 +25,17 @@ public interface BlockFib {
     boolean isLenient();
 
     /**
+     * Whether this BlockFib modifies the drops of fibbed states.
+     *
+     * <p>
+     * If this method returns {@code true}, and a player mines state A fibbed as state B,
+     * the loot of state B will be dropped instead of the default state A loot.
+     *
+     * @return {@code true} if this BlockFib should modify the drops of fibbed states
+     */
+    boolean modifiesDrops();
+
+    /**
      * Gets the list of states this block fib applies to.
      *
      * This list should not change throughout a fibs life.
@@ -62,29 +73,30 @@ public interface BlockFib {
         private final BiFunction<@Nullable Predicate<ServerPlayerEntity>, Boolean, BlockFib> constructor;
         private Predicate<ServerPlayerEntity> condition = null;
         private boolean lenient = false;
+        private boolean modifiesDrops = false;
 
         public Builder(Block inputBlock, Block outputBlock) {
             this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockFibImpl(inputBlock, outputBlock, lenient)
-                    : new BlockFibImpl.Conditional(inputBlock, outputBlock, lenient, condition);
+                    ? new BlockFibImpl(inputBlock, outputBlock, lenient, modifiesDrops)
+                    : new BlockFibImpl.Conditional(inputBlock, outputBlock, lenient, modifiesDrops, condition);
         }
 
         public Builder(BlockState inputState, BlockState outputState) {
             this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockStateFib(inputState, outputState, lenient)
-                    : new BlockStateFib.Conditional(inputState, outputState, lenient, condition);
+                    ? new BlockStateFib(inputState, outputState, lenient, modifiesDrops)
+                    : new BlockStateFib.Conditional(inputState, outputState, lenient, modifiesDrops, condition);
         }
 
         public Builder(Block inputBlock, BlockState outputState) {
             this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockFibImpl(inputBlock, outputState, lenient)
-                    : new BlockFibImpl.Conditional(inputBlock, outputState, lenient, condition);
+                    ? new BlockFibImpl(inputBlock, outputState, lenient, modifiesDrops)
+                    : new BlockFibImpl.Conditional(inputBlock, outputState, lenient, modifiesDrops, condition);
         }
 
         public Builder(BlockState inputState, Block outputBlock) {
             this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockStateFib(inputState, outputBlock.getDefaultState(), lenient)
-                    : new BlockStateFib.Conditional(inputState, outputBlock.getDefaultState(), lenient, condition);
+                    ? new BlockStateFib(inputState, outputBlock.getDefaultState(), lenient, modifiesDrops)
+                    : new BlockStateFib.Conditional(inputState, outputBlock.getDefaultState(), lenient, modifiesDrops, condition);
         }
 
         public Builder withCondition(Predicate<ServerPlayerEntity> condition) {
@@ -94,6 +106,11 @@ public interface BlockFib {
 
         public Builder lenient() {
             this.lenient = true;
+            return this;
+        }
+
+        public Builder modifiesDrops() {
+            this.modifiesDrops = true;
             return this;
         }
 

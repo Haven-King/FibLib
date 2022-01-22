@@ -14,17 +14,24 @@ public class BlockStateFib implements BlockFib {
     private final BlockState outputState;
     private final ImmutableList<BlockState> inputStates;
     private final boolean lenient;
+    private final boolean modifiesDrops;
 
-    public BlockStateFib(BlockState inputState, BlockState outputState, boolean lenient) {
+    public BlockStateFib(BlockState inputState, BlockState outputState, boolean lenient, boolean modifiesDrops) {
         this.inputState = inputState;
         this.outputState = outputState;
         this.inputStates = ImmutableList.of(inputState);
         this.lenient = lenient;
+        this.modifiesDrops = modifiesDrops;
     }
 
     @Override
     public final boolean isLenient() {
         return this.lenient;
+    }
+
+    @Override
+    public final boolean modifiesDrops() {
+        return this.modifiesDrops;
     }
 
     @Override
@@ -40,8 +47,8 @@ public class BlockStateFib implements BlockFib {
     public static class Conditional extends BlockStateFib {
         private final Predicate<@Nullable ServerPlayerEntity> condition;
 
-        public Conditional(BlockState inputState, BlockState outputState, boolean lenient, Predicate<@Nullable ServerPlayerEntity> condition) {
-            super(inputState, outputState, lenient);
+        public Conditional(BlockState inputState, BlockState outputState, boolean lenient, boolean modifiesBlocks, Predicate<@Nullable ServerPlayerEntity> condition) {
+            super(inputState, outputState, lenient, modifiesBlocks);
             this.condition = condition;
         }
 
