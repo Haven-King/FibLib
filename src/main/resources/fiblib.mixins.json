@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "dev.hephaestus.fiblib.mixin",
   "plugin": "dev.hephaestus.fiblib.mixin.VolatileMixinPlugin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "CDSMAccessor",
     "ChunkReloader",
@@ -22,6 +22,7 @@
     "packets.chunkdata.MixinIdListPalette",
     "packets.chunkdata.MixinLithiumHashPalette",
     "packets.chunkdata.MixinPalettedContainer",
+    "packets.chunkdata.MixinSingularPalette",
     "packets.chunkdata.MixinThreadedAnvilChunkStorage"
   ],
   "client": [
