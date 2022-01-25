@@ -15,12 +15,20 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinLithiumHashPalette<T> implements Fixable {
     @Redirect(method = "writePacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"))
     public int toPacketRedir(IndexedIterable<T> idList, T object) {
-        return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        if(object instanceof BlockState) {
+            return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        }
+
+        return idList.getRawId(object);
     }
 
     @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"))
     public int getPacketSizeRedir(IndexedIterable<T> idList, T object) {
-        return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        if(object instanceof BlockState) {
+            return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        }
+
+        return idList.getRawId(object);
     }
 
     private ServerPlayerEntity player;

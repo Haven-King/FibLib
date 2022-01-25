@@ -17,12 +17,20 @@ public class MixinBiMapPalette<T> implements Fixable {
     ServerPlayerEntity player;
     @Redirect(method = "writePacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"))
     public int toPacketRedir(IndexedIterable<T> idList, T object) {
-        return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        if(object instanceof BlockState) {
+            return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        }
+
+        return idList.getRawId(object);
     }
 
     @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IndexedIterable;getRawId(Ljava/lang/Object;)I"))
     public int packetSizeRedir(IndexedIterable<T> idList, T object) {
-        return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        if(object instanceof BlockState) {
+            return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+        }
+
+        return idList.getRawId(object);
     }
 
     @Override
