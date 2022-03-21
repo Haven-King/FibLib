@@ -1,0 +1,100 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+repositories {
+    maven {
+        url 'https://maven.fabricmc.net/'
+        name 'Fabric'
+    }
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}+${rootProject.minecraft_major_version}"
+    modApi "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
+
+    compileOnly "com.github.CaffeineMC.lithium-fabric:lithium:mc${rootProject.minecraft_version}-${project.lithium_version}"
+    compileOnly "com.github.CaffeineMC.lithium-fabric:lithium-api:mc${rootProject.minecraft_version}-${project.lithium_version}"
+
+    compileOnly "com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.95-${rootProject.minecraft_major_version}"
+    compileOnly("com.github.Virtuoel:Pehkui") {
+        version {
+            strictly "fabric~1.16.4-SNAPSHOT"
+        }
+    }
+
+    common(project(path: ":common", configuration: "dev")) {
+        transitive = false
+    }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
+        transitive = false
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
+}
+
+jar {
+    classifier "dev"
+    from "LICENSE"
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url 's3://hephaestus.dev/release'
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+        }
+    }
+}

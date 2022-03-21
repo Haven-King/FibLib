@@ -1,6 +1,7 @@
 package dev.hephaestus.fiblib.mixin.packets.chunkdata;
 
 import dev.hephaestus.fiblib.impl.FibLib;
+import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.Fixable;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;

@@ -4,6 +4,7 @@ import com.qouteall.immersive_portals.chunk_loading.ChunkDataSyncManager;
 import com.qouteall.immersive_portals.chunk_loading.DimensionalChunkPos;
 import com.qouteall.immersive_portals.ducks.IEThreadedAnvilChunkStorage;
 import dev.hephaestus.fiblib.impl.FibLib;
+import dev.hephaestus.fiblib.impl.FibLog;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

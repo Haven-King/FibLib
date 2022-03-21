@@ -9,6 +9,7 @@ import com.qouteall.immersive_portals.ducks.IEThreadedAnvilChunkStorage;
 import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import dev.hephaestus.fiblib.impl.FibLib;
+import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.LookupTable;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;

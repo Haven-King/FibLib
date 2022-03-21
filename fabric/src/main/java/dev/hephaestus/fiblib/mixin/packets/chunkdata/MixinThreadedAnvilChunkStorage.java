@@ -1,6 +1,7 @@
 package dev.hephaestus.fiblib.mixin.packets.chunkdata;
 
 import dev.hephaestus.fiblib.impl.FibLib;
+import dev.hephaestus.fiblib.impl.FibLog;
 import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;

@@ -2,7 +2,7 @@ package dev.hephaestus.fiblib.api;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import dev.hephaestus.fiblib.impl.FibLib;
+import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.LookupTable;
 import net.minecraft.block.BlockState;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -19,7 +19,7 @@ public final class BlockFibRegistry {
     private static final Map<Identifier, BlockFib> DYNAMIC_BLOCK_FIBS = new HashMap<>();
 
     static {
-        FibLib.log("Initialized BlockFibRegistry");
+        FibLog.log("Initialized BlockFibRegistry");
     }
 
     private BlockFibRegistry() {

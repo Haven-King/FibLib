@@ -24,6 +24,11 @@ bin/
 .classpath
 .project
 
+#architectury
+common/remappedSrc
+fabric/remappedSrc
+forge/remappedSrc
+
 # fabric
 
 run/
