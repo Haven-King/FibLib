@@ -11,6 +11,11 @@ public class FibLog {
 	private static final Logger LOGGER = LogManager.getLogger();
     public static boolean DEBUG = false;
 
+	public static void enableDebug() {
+		DEBUG = true;
+		log("Debug enabled");
+	}
+
 	public static void log(String msg) {
 		log("%s", msg);
 	}

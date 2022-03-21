@@ -1,12 +1,11 @@
 package dev.hephaestus.fiblib.mixin.packets.chunkdata;
 
-import dev.hephaestus.fiblib.impl.Fixable;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.collection.IdList;
-import net.minecraft.world.chunk.ArrayPalette;
-import net.minecraft.world.chunk.WorldChunk;
+import dev.hephaestus.fiblib.impl.Fixable;
+import net.minecraft.core.IdMapper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LinearPalette;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -15,27 +14,31 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unchecked")
-@Mixin(ArrayPalette.class)
+@Mixin(LinearPalette.class)
 public class MixinArrayPalette<T> implements Fixable {
-    @Mutable @Final @Shadow private final IdList<T> idList;
-    public MixinArrayPalette(IdList<T> idList) {
-        this.idList = idList;
+    @Mutable
+    @Final
+    @Shadow
+    private final IdMapper<T> registry;
+
+    public MixinArrayPalette(IdMapper<T> registry) {
+        this.registry = registry;
     }
 
-    @Redirect(method = "toPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getRawId(Ljava/lang/Object;)I"))
-    public int toPacketRedir(IdList<T> idList, T object) {
-        return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+    @Redirect(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/IdMapper;getId(Ljava/lang/Object;)I"))
+    public int toPacketRedir(IdMapper<T> idList, T object) {
+        return idList.getId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
     }
 
-    @Redirect(method = "getPacketSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/IdList;getRawId(Ljava/lang/Object;)I"))
-    public int getPacketSizeRedir(IdList<T> idList, T object) {
-        return idList.getRawId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
+    @Redirect(method = "getSerializedSize", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/IdMapper;getId(Ljava/lang/Object;)I"))
+    public int getPacketSizeRedir(IdMapper<T> idList, T object) {
+        return idList.getId((T) BlockFibRegistry.getBlockState((BlockState) object, this.player));
     }
 
-    private ServerPlayerEntity player;
+    private ServerPlayer player;
 
     @Override
-    public void fix(ServerPlayerEntity player) {
+    public void fix(ServerPlayer player) {
         this.player = player;
     }
 }

@@ -1,16 +1,16 @@
 package dev.hephaestus.fiblib.mixin;
 
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
+import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ThreadedAnvilChunkStorage.class)
+@Mixin(ChunkMap.class)
 public interface ChunkReloader {
-    @Invoker("handlePlayerAddedOrRemoved")
-    void reloadChunks(ServerPlayerEntity playerEntity, boolean added);
+    @Invoker("updatePlayerStatus")
+    void reloadChunks(ServerPlayer playerEntity, boolean added);
 
-    @Accessor
+    @Accessor("viewDistance")
     int getWatchDistance();
 }

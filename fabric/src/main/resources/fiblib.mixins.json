@@ -5,24 +5,23 @@
   "plugin": "dev.hephaestus.fiblib.mixin.VolatileMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "CDSMAccessor",
     "ChunkReloader",
     "MixinMinecraftServer",
     "MixinServerPlayNetworkHandler",
-    "TACSAccessor",
     "packets.MixinBlockUpdateS2CPacket",
     "packets.MixinPlayerActionResponseS2CPacket",
     "packets.chunkdata.MixinArrayPalette",
     "packets.chunkdata.MixinBiMapPalette",
     "packets.chunkdata.MixinChunkDataS2CPacket",
-    "packets.chunkdata.MixinChunkDataSyncManager",
     "packets.chunkdata.MixinChunkDeltaUpdateS2CPacket",
     "packets.chunkdata.MixinChunkHolder",
     "packets.chunkdata.MixinChunkSection",
     "packets.chunkdata.MixinIdListPalette",
-    "packets.chunkdata.MixinLithiumHashPalette",
+    "lithium.MixinLithiumHashPalette",
     "packets.chunkdata.MixinPalettedContainer",
-    "packets.chunkdata.MixinThreadedAnvilChunkStorage"
+    "packets.chunkdata.MixinThreadedAnvilChunkStorage",
+    "portals.CDSMAccessor",
+    "portals.MixinChunkDataSyncManager"
   ],
   "client": [
   ],

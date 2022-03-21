@@ -27,11 +27,10 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}+${rootProject.minecraft_major_version}"
     modApi "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
 
-    compileOnly "com.github.CaffeineMC.lithium-fabric:lithium:mc${rootProject.minecraft_version}-${project.lithium_version}"
-    compileOnly "com.github.CaffeineMC.lithium-fabric:lithium-api:mc${rootProject.minecraft_version}-${project.lithium_version}"
-
-    compileOnly "com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.95-${rootProject.minecraft_major_version}"
-    compileOnly("com.github.Virtuoel:Pehkui") {
+    modCompileOnly "com.github.CaffeineMC.lithium-fabric:lithium:mc${rootProject.minecraft_version}-${project.lithium_version}"
+    modCompileOnly "com.github.CaffeineMC.lithium-fabric:lithium-api:mc${rootProject.minecraft_version}-${project.lithium_version}"
+    modCompileOnly "com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.95-${rootProject.minecraft_major_version}"
+    modCompileOnly("com.github.Virtuoel:Pehkui") {
         version {
             strictly "fabric~1.16.4-SNAPSHOT"
         }

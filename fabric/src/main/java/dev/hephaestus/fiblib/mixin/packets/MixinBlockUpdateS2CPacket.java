@@ -1,19 +1,22 @@
 package dev.hephaestus.fiblib.mixin.packets;
 
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
+import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.Fixable;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(BlockUpdateS2CPacket.class)
+@Mixin(ClientboundBlockUpdatePacket.class)
 public class MixinBlockUpdateS2CPacket implements Fixable {
-    @Shadow private BlockState state;
+    @Shadow
+    private BlockState blockState;
 
     @Override
-    public void fix(ServerPlayerEntity player) {
-        this.state = BlockFibRegistry.getBlockStateLenient(this.state, player);
+    public void fix(ServerPlayer player) {
+        FibLog.debug("Fixing block %s for %s", this.blockState.getBlock().getName().getString(), player.getName().getString());
+        this.blockState = BlockFibRegistry.getBlockStateLenient(this.blockState, player);
     }
 }

@@ -3,22 +3,22 @@ package dev.hephaestus.fiblib.api;
 import com.google.common.collect.ImmutableCollection;
 import dev.hephaestus.fiblib.impl.BlockFibImpl;
 import dev.hephaestus.fiblib.impl.BlockStateFib;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerActionResponseS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import net.minecraft.network.protocol.game.ClientboundBlockBreakAckPacket;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface BlockFib {
     /**
      * Whether or not this BlockFib is lenient.
      *
-     * If a fib is lenient, it will not be applied when either a {@link PlayerActionResponseS2CPacket} or a
-     * {@link BlockUpdateS2CPacket} is sent to the client. This means if the block is updated, or the player right
+     * If a fib is lenient, it will not be applied when either a {@link ClientboundBlockBreakAckPacket} or a
+     * {@link ClientboundBlockUpdatePacket} is sent to the client. This means if the block is updated, or the player right
      * clicks or begins mining the block, it will be revealed. This can be useful for block fibs that need to hide
      * blocks at long ranges (namely: anti x-ray).
      */
@@ -40,7 +40,7 @@ public interface BlockFib {
      * @param playerEntity the player the state will be sent to
      * @return the new fibbed state, or the original state
      */
-    BlockState getOutput(BlockState inputState, ServerPlayerEntity playerEntity);
+    BlockState getOutput(BlockState inputState, ServerPlayer playerEntity);
 
     static Builder builder(Block inputBlock, Block outputBlock) {
         return new Builder(inputBlock, outputBlock);
@@ -59,8 +59,8 @@ public interface BlockFib {
     }
 
     class Builder {
-        private final BiFunction<@Nullable Predicate<ServerPlayerEntity>, Boolean, BlockFib> constructor;
-        private Predicate<ServerPlayerEntity> condition = null;
+        private final BiFunction<@Nullable Predicate<ServerPlayer>, Boolean, BlockFib> constructor;
+        private Predicate<ServerPlayer> condition = null;
         private boolean lenient = false;
 
         public Builder(Block inputBlock, Block outputBlock) {
@@ -83,11 +83,11 @@ public interface BlockFib {
 
         public Builder(BlockState inputState, Block outputBlock) {
             this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockStateFib(inputState, outputBlock.getDefaultState(), lenient)
-                    : new BlockStateFib.Conditional(inputState, outputBlock.getDefaultState(), lenient, condition);
+                    ? new BlockStateFib(inputState, outputBlock.defaultBlockState(), lenient)
+                    : new BlockStateFib.Conditional(inputState, outputBlock.defaultBlockState(), lenient, condition);
         }
 
-        public Builder withCondition(Predicate<ServerPlayerEntity> condition) {
+        public Builder withCondition(Predicate<ServerPlayer> condition) {
             this.condition = condition;
             return this;
         }

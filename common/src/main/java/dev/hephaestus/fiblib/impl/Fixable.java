@@ -1,8 +1,7 @@
 package dev.hephaestus.fiblib.impl;
 
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface Fixable {
-    void fix(ServerPlayerEntity player);
+    void fix(ServerPlayer player);
 }

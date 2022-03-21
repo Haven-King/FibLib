@@ -1,8 +1,8 @@
 package dev.hephaestus.fiblib.impl;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface LookupTable {
-    BlockState get(BlockState blockState, ServerPlayerEntity playerEntity);
+    BlockState get(BlockState blockState, ServerPlayer playerEntity);
 }

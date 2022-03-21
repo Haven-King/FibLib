@@ -25,6 +25,7 @@ bin/
 .project
 
 #architectury
+.architectury-transformer
 common/remappedSrc
 fabric/remappedSrc
 forge/remappedSrc
