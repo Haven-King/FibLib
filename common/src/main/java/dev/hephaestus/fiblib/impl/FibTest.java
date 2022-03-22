@@ -19,7 +19,7 @@ public class FibTest {
         ResourceLocation coalOre = new ResourceLocation("minecraft:coal_ore");
         ResourceLocation stone = new ResourceLocation("minecraft:stone");
         BlockFib fib = BlockFib.builder(Registry.BLOCK.get(coalOre), Registry.BLOCK.get(stone)).modifiesDrops()
-                .withCondition(player -> !player.isCreative())
+                .withCondition(player -> player.isCreative())
                 .build();
 
         ResourceLocation fibName = new ResourceLocation("fiblib:test_coal_ore");
