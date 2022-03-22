@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.packets;
 
 import dev.hephaestus.fiblib.impl.FibLib;
 import dev.hephaestus.fiblib.impl.FibLog;
@@ -30,7 +30,6 @@ public class MixinChunkDataS2CPacket {
     @Inject(method = "calculateChunkSize", at = @At(value = "HEAD"))
     public void fixDataSize(LevelChunk chunk, int includedSectionsMark, CallbackInfoReturnable<Integer> cir) {
         String playerName = this.player == null ? "[Nobody]" : this.player.getName().getString();
-        FibLog.debug("Maybe fixing chunk %s sections for %s", chunk.toString(), playerName);
         if (this.player != null) {
             for (LevelChunkSection chunkSection : chunk.getSections()) {
                 if (chunkSection != null) {

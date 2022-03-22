@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.packets;
 
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import dev.hephaestus.fiblib.impl.FibLog;

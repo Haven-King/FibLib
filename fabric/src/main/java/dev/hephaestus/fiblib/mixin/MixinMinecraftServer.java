@@ -7,7 +7,6 @@ import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import dev.hephaestus.fiblib.impl.FibLib;
 import dev.hephaestus.fiblib.impl.FibLog;
-import dev.hephaestus.fiblib.impl.FibTest;
 import dev.hephaestus.fiblib.impl.LookupTable;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
@@ -93,23 +92,24 @@ public class MixinMinecraftServer implements LookupTable {
     }
 
     @Inject(method = "reloadResources", at = @At("HEAD"))
-    private static void resetBlockFibs(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-        FibLog.enableDebug();
+    private void resetBlockFibs(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         BlockFibRegistry.reset();
-        FibTest.fibIronOre();
-        FibTest.fibCoalOre();
     }
 
     @Override
     public BlockState get(BlockState blockState, ServerPlayer playerEntity) {
-        this.triple.left = BlockFibRegistry.getBlockFib(blockState, playerEntity);
+        FibLog.debug("Getting replacement for %s", blockState.getBlock().getName().getString());
 
-        if (this.triple.left == null) return blockState;
+        BlockFib fib = BlockFibRegistry.getBlockFib(blockState, playerEntity);
 
+        if (fib == null) return blockState;
+
+        this.triple.left = fib;
         this.triple.middle = blockState;
         this.triple.right = playerEntity.getUUID();
 
         if (!this.playerLookupTable.containsKey(this.triple)) {
+            FibLog.log("Saving replacement for %s for faster lookup", blockState.getBlock().getName().getString());
             ImmutableTriple<BlockFib, BlockState, UUID> key =
                     ImmutableTriple.of(this.triple.left, this.triple.middle, this.triple.right);
 

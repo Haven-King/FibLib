@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.level.chunk;
 
 import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.Fixable;

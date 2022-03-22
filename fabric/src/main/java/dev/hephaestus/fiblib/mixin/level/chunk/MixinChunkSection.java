@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.level.chunk;
 
 import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.Fixable;
@@ -20,7 +20,7 @@ public class MixinChunkSection implements Fixable {
 
     @Override
     public void fix(ServerPlayer player) {
-        FibLog.debug("Fixing %s blocks for %s", states.getSerializedSize(), player.getName().getString());
+        FibLog.debug("Fixing %s blocks for %s in chunk section", states.getSerializedSize(), player.getName().getString(), this.toString());
         ((Fixable) states).fix(player);
     }
 }

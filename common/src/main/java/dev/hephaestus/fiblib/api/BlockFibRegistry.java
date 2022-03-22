@@ -45,6 +45,8 @@ public final class BlockFibRegistry {
      * @param blockFib the block fib to register
      */
     public static void register(ResourceLocation id, BlockFib blockFib) {
+        FibLog.log("Registering fib %s", id.toString());
+
         if (DYNAMIC_BLOCK_FIBS.containsKey(id)) {
             BlockFib old = DYNAMIC_BLOCK_FIBS.get(id);
 

@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.mixin.packets.chunkdata;
+package dev.hephaestus.fiblib.mixin.level.chunk;
 
 import dev.hephaestus.fiblib.impl.FibLog;
 import dev.hephaestus.fiblib.impl.Fixable;
@@ -15,7 +15,7 @@ public class MixinPalettedContainer<T> implements Fixable {
 
     @Override
     public void fix(ServerPlayer player) {
-        FibLog.debug("Fixing Palette %s for %s", palette.toString(), player.getName().getString());
+        FibLog.debug("Fixing contained Palette %s for %s", palette.toString(), player.getName().getString());
         ((Fixable) palette).fix(player);
     }
 }

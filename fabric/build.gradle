@@ -65,7 +65,6 @@ remapJar {
 
 jar {
     classifier "dev"
-    from "LICENSE"
 }
 
 sourcesJar {

@@ -14,22 +14,29 @@ public class BlockFibImpl implements BlockFib {
     private final Block inputBlock;
     private final BlockState outputState;
     private final boolean lenient;
+    private final boolean modifiesDrops;
     private final ImmutableList<BlockState> inputs;
 
-    public BlockFibImpl(Block inputBlock, BlockState outputState, boolean lenient) {
+    public BlockFibImpl(Block inputBlock, BlockState outputState, boolean lenient, boolean modifiesDrops) {
         this.inputBlock = inputBlock;
         this.outputState = outputState;
         this.inputs = inputBlock.getStateDefinition().getPossibleStates();
         this.lenient = lenient;
+        this.modifiesDrops = modifiesDrops;
     }
 
-    public BlockFibImpl(Block inputBlock, Block outputBlock, boolean lenient) {
-        this(inputBlock, outputBlock.defaultBlockState(), lenient);
+    public BlockFibImpl(Block inputBlock, Block outputBlock, boolean lenient, boolean modifiesDrops) {
+        this(inputBlock, outputBlock.defaultBlockState(), lenient,modifiesDrops);
     }
 
     @Override
     public final boolean isLenient() {
         return this.lenient;
+    }
+
+    @Override
+    public final boolean modifiesDrops() {
+        return this.modifiesDrops;
     }
 
     @Override
@@ -45,12 +52,12 @@ public class BlockFibImpl implements BlockFib {
     public static class Conditional extends BlockFibImpl {
         private final Predicate<@Nullable ServerPlayer> condition;
 
-        public Conditional(Block inputBlock, Block outputBlock, boolean lenient, Predicate<@Nullable ServerPlayer> condition) {
-            this(inputBlock, outputBlock.defaultBlockState(), lenient, condition);
+        public Conditional(Block inputBlock, Block outputBlock, boolean lenient, boolean modifiesDrops, Predicate<@Nullable ServerPlayer> condition) {
+            this(inputBlock, outputBlock.defaultBlockState(), lenient, modifiesDrops, condition);
         }
 
-        public Conditional(Block inputBlock, BlockState outputState, boolean lenient, Predicate<@Nullable ServerPlayer> condition) {
-            super(inputBlock, outputState, lenient);
+        public Conditional(Block inputBlock, BlockState outputState, boolean lenient, boolean modifiesDrops, Predicate<@Nullable ServerPlayer> condition) {
+            super(inputBlock, outputState, lenient, modifiesDrops);
             this.condition = condition;
         }
 
