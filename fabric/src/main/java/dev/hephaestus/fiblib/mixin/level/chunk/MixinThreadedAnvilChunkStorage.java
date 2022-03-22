@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChunkMap.class)
 public abstract class MixinThreadedAnvilChunkStorage {
-    @Inject(method = "playerLoadedChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundLevelChunkPacket;<init>(Lnet/minecraft/world/level/chunk/LevelChunk;I)V"))
+    @Inject(method = "playerLoadedChunk", at = @At(value = "NEW", target = "net/minecraft/network/protocol/game/ClientboundLevelChunkPacket"))
     public void fixPackets(ServerPlayer player, Packet<?>[] packets, LevelChunk chunk, CallbackInfo ci) {
         FibLog.debug("Setting player %s for chunk %s", player.getName().getString(), chunk.toString());
         FibLib.PLAYER.set(player);

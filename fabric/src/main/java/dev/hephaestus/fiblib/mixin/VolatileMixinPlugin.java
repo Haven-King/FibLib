@@ -26,6 +26,12 @@ public class VolatileMixinPlugin implements IMixinConfigPlugin {
 			return loader.isModLoaded("lithium") || loader.isModLoaded("hopperoptimizations-lithium");
 		}
 
+		if (loader.isModLoaded("immersive_portals")) {
+			return !mixinClassName.endsWith("MixinThreadedAnvilChunkStorage");
+		} else if (mixinClassName.startsWith("com.qouteall")) {
+			return false;
+		}
+
 		return true;
 	}
 

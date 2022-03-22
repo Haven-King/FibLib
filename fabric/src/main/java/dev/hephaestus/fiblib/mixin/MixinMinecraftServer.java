@@ -7,6 +7,7 @@ import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import dev.hephaestus.fiblib.impl.FibLib;
 import dev.hephaestus.fiblib.impl.FibLog;
+import dev.hephaestus.fiblib.impl.FibTest;
 import dev.hephaestus.fiblib.impl.LookupTable;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
@@ -56,6 +57,8 @@ public class MixinMinecraftServer implements LookupTable {
         this.playerLookupTable = new HashMap<>();
         this.updated = new HashSet<>();
         this.triple = new MutableTriple<>();
+        FibTest.fibCoalOre();
+        FibTest.fibIronOre();
     }
 
     @Inject(method = "tickServer", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
