@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientboundLevelChunkPacket.class)
-public class MixinChunkDataS2CPacket {
+public class MixinClientLevelChunkDataPacket {
     @Unique
     private ServerPlayer player = null;
 

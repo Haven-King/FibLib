@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unchecked")
 @Mixin(LinearPalette.class)
-public class MixinArrayPalette<T> implements Fixable {
+public class MixinLinearPalette<T> implements Fixable {
     @Mutable
     @Final
     @Shadow
     private final IdMapper<T> registry;
 
-    public MixinArrayPalette(IdMapper<T> registry) {
+    public MixinLinearPalette(IdMapper<T> registry) {
         this.registry = registry;
     }
 

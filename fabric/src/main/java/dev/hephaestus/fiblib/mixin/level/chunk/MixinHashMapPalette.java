@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unchecked")
 @Mixin(HashMapPalette.class)
-public class MixinBiMapPalette<T> implements Fixable {
+public class MixinHashMapPalette<T> implements Fixable {
     ServerPlayer player;
 
     @Redirect(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/IdMapper;getId(Ljava/lang/Object;)I"))

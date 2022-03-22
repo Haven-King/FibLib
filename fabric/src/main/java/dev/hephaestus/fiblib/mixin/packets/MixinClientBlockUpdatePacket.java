@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientboundBlockUpdatePacket.class)
-public class MixinBlockUpdateS2CPacket implements Fixable {
+public class MixinClientBlockUpdatePacket implements Fixable {
     @Shadow
     private BlockState blockState;
 

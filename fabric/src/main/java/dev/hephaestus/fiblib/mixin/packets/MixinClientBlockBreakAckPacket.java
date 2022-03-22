@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientboundBlockBreakAckPacket.class)
-public class MixinPlayerActionResponseS2CPacket implements Fixable {
+public class MixinClientBlockBreakAckPacket implements Fixable {
     @Shadow
     private BlockState state;
 

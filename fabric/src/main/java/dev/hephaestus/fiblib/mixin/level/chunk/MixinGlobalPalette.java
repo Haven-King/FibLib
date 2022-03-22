@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @SuppressWarnings("unchecked")
 @Mixin(GlobalPalette.class)
-public class MixinIdListPalette<T> implements Fixable {
+public class MixinGlobalPalette<T> implements Fixable {
     @Redirect(method = "idFor", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/IdMapper;getId(Ljava/lang/Object;)I"))
     public int getIndexRedir(IdMapper<T> idList, T object) {
         FibLog.debug("Fixing GlobalPalette block %s before writing for %s", ((BlockState) object).getBlock().getName().getString(), player.getName().getString());
