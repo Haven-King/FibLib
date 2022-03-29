@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
         maven {
-            name = "Fabric"
-            url = "https://maven.fabricmc.net/"
+            url 'https://maven.fabricmc.net/'
+            name 'Fabric'
         }
         maven {
             name = "Architectury"
@@ -11,6 +11,10 @@ pluginManagement {
         maven {
             name = "Forge"
             url = "https://maven.minecraftforge.net/"
+            content {
+                excludeGroup "com.github"
+                excludeGroupByRegex "com\\.github.*"
+            }
         }
         gradlePluginPortal()
     }
@@ -18,4 +22,4 @@ pluginManagement {
 
 include("common")
 include("fabric")
-
+include("forge")
