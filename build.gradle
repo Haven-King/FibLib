@@ -31,13 +31,6 @@ allprojects {
     version = rootProject.mod_version
     group = rootProject.maven_group
 
-    repositories {
-        maven {
-            name = 'JitPack'
-            url = 'https://jitpack.io'
-        }
-    }
-
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
 

@@ -11,7 +11,7 @@
     "homepage": "https://hephaestus.dev/"
   },
   "license": "MIT",
-  "icon": "assets/fiblib/icon.png",
+  "icon": "assets.fiblib/icon.png",
   "environment": "*",
   "entrypoints": {
   },

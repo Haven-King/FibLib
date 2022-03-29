@@ -2,25 +2,32 @@ package dev.hephaestus.fiblib.api;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import dev.hephaestus.fiblib.impl.FibLog;
-import dev.hephaestus.fiblib.impl.LookupTable;
+import dev.hephaestus.fiblib.FibLib;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.state.BlockState;
 
+@SuppressWarnings("unused")
 public final class BlockFibRegistry {
-    private static final Multimap<BlockState, BlockFib> STATIC_BLOCK_FIBS = HashMultimap.create();
+    /**
+     * Currently registered fibs
+     */
     private static final Multimap<BlockState, BlockFib> BLOCK_FIBS = HashMultimap.create();
-    private static final Map<ResourceLocation, BlockFib> DYNAMIC_BLOCK_FIBS = new HashMap<>();
 
-    static {
-        FibLog.log("Initialized BlockFibRegistry");
-    }
+    /**
+     * Permanently fibs
+     */
+    private static final Multimap<BlockState, BlockFib> STATIC_BLOCK_FIBS = HashMultimap.create();
+
+    /**
+     * Temporary fibs
+     */
+    private static final Map<ResourceLocation, BlockFib> DYNAMIC_BLOCK_FIBS = new HashMap<>();
 
     private BlockFibRegistry() {
     }
@@ -45,7 +52,7 @@ public final class BlockFibRegistry {
      * @param blockFib the block fib to register
      */
     public static void register(ResourceLocation id, BlockFib blockFib) {
-        FibLog.log("Registering fib %s", id.toString());
+        FibLib.log("Registering fib %s", id.toString());
 
         if (DYNAMIC_BLOCK_FIBS.containsKey(id)) {
             BlockFib old = DYNAMIC_BLOCK_FIBS.get(id);
@@ -55,40 +62,6 @@ public final class BlockFibRegistry {
 
         blockFib.getInputs().forEach(state -> BLOCK_FIBS.put(state, blockFib));
         DYNAMIC_BLOCK_FIBS.put(id, blockFib);
-    }
-
-    /**
-     * Returns the result of any fibs on a given  {@link BlockState} for the given player.
-     *
-     * @param inputState  the state of the block we're inquiring about. Note that because this is passed to a BlockFib,
-     *                    other aspects of the state than the Block may be used in determining the output
-     * @param playerEntity the player who we will be fibbing to
-     * @return the result of the fib.
-     */
-    public static BlockState getBlockState(BlockState inputState, ServerPlayer playerEntity) {
-        if (playerEntity != null && playerEntity.getServer() != null) {
-            return ((LookupTable) playerEntity.getServer()).get(inputState, playerEntity);
-        }
-
-        return inputState;
-    }
-
-    /**
-     * Returns the first fib applied to a given {@link BlockState} for the given player.
-     *
-     * @param inputState  the state of the block we're inquiring about. Note that because this is passed to a BlockFib,
-     *                    other aspects of the state than the Block may be used in determining the output
-     * @param playerEntity the player who we will be fibbing to
-     * @return the resulting fib.
-     */
-    public static @Nullable BlockFib getBlockFib(BlockState inputState, ServerPlayer playerEntity) {
-        for (BlockFib blockFib : BLOCK_FIBS.get(inputState)) {
-            if (blockFib.getOutput(inputState, playerEntity) != inputState) {
-                return blockFib;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -105,8 +78,17 @@ public final class BlockFibRegistry {
      * @param inputState the state whose fibs we want
      * @return a (potentially empty) iterable of block fibs
      */
-    public static Iterable<BlockFib> getBlockFibs(BlockState inputState) {
+    public static Iterable<BlockFib> getAllForState(BlockState inputState) {
         return BLOCK_FIBS.get(inputState);
+    }
+
+    /**
+     * Gets all block fibs registered.
+     *
+     * @return a (potentially empty) iterable of block fibs
+     */
+    public static Collection<Map.Entry<BlockState, BlockFib>> getAll() {
+        return BLOCK_FIBS.entries();
     }
 
     /**
@@ -115,26 +97,15 @@ public final class BlockFibRegistry {
      * @param id the unique identifier to query
      * @return the registered block fib, if it exists
      */
-    public static @Nullable BlockFib getBlockFib(ResourceLocation id) {
+    public static @Nullable BlockFib getDynamicById(ResourceLocation id) {
         return DYNAMIC_BLOCK_FIBS.get(id);
     }
 
     @ApiStatus.Internal
-    public static void reset() {
-        FibLog.log("Resetting fib registry");
+    public static void resetDynamicFibs() {
+        FibLib.log("Resetting fib registry");
         BLOCK_FIBS.clear();
         BLOCK_FIBS.putAll(STATIC_BLOCK_FIBS);
     }
 
-    public static BlockState getBlockStateLenient(BlockState state, ServerPlayer player) {
-        for (BlockFib fib : BLOCK_FIBS.get(state)) {
-            BlockState newState;
-
-            if (!fib.isLenient() && ((newState = fib.getOutput(state, player)) != state)) {
-                return newState;
-            }
-        }
-
-        return state;
-    }
 }

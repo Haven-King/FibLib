@@ -2,17 +2,15 @@ package dev.hephaestus.fiblib.api;
 
 import com.google.common.collect.ImmutableCollection;
 import dev.hephaestus.fiblib.impl.BlockFibImpl;
-import dev.hephaestus.fiblib.impl.BlockStateFib;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
-
 import net.minecraft.network.protocol.game.ClientboundBlockBreakAckPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface BlockFib {
     /**
@@ -52,55 +50,59 @@ public interface BlockFib {
      * @param playerEntity the player the state will be sent to
      * @return the new fibbed state, or the original state
      */
-    BlockState getOutput(BlockState inputState, ServerPlayer playerEntity);
+    BlockState getOutput(BlockState inputState, Player playerEntity);
 
     static Builder builder(Block inputBlock, Block outputBlock) {
         return new Builder(inputBlock, outputBlock);
     }
 
+    @SuppressWarnings("unused")
     static Builder builder(BlockState inputState, BlockState outputState) {
         return new Builder(inputState, outputState);
     }
 
+    @SuppressWarnings("unused")
     static Builder builder(Block inputBlock, BlockState outputState) {
         return new Builder(inputBlock, outputState);
     }
 
+    @SuppressWarnings("unused")
     static Builder builder(BlockState inputState, Block outputBlock) {
         return new Builder(inputState, outputBlock);
     }
 
+    @SuppressWarnings("unused")
     class Builder {
-        private final BiFunction<@Nullable Predicate<ServerPlayer>, Boolean, BlockFib> constructor;
-        private Predicate<ServerPlayer> condition = null;
+        private final Function<@Nullable Predicate<Player>, BlockFib> constructor;
+        private Predicate<Player> condition = null;
         private boolean lenient = false;
         private boolean modifiesDrops = false;
 
         public Builder(Block inputBlock, Block outputBlock) {
-            this.constructor = (condition, lenient) -> condition == null
+            this.constructor = (condition) -> condition == null
                     ? new BlockFibImpl(inputBlock, outputBlock, lenient, modifiesDrops)
                     : new BlockFibImpl.Conditional(inputBlock, outputBlock, lenient, modifiesDrops, condition);
         }
 
         public Builder(BlockState inputState, BlockState outputState) {
-            this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockStateFib(inputState, outputState, lenient, modifiesDrops)
-                    : new BlockStateFib.Conditional(inputState, outputState, lenient, modifiesDrops, condition);
+            this.constructor = (condition) -> condition == null
+                    ? new BlockFibImpl(inputState, outputState, lenient, modifiesDrops)
+                    : new BlockFibImpl.Conditional(inputState, outputState, lenient, modifiesDrops, condition);
         }
 
         public Builder(Block inputBlock, BlockState outputState) {
-            this.constructor = (condition, lenient) -> condition == null
+            this.constructor = (condition) -> condition == null
                     ? new BlockFibImpl(inputBlock, outputState, lenient, modifiesDrops)
                     : new BlockFibImpl.Conditional(inputBlock, outputState, lenient, modifiesDrops, condition);
         }
 
         public Builder(BlockState inputState, Block outputBlock) {
-            this.constructor = (condition, lenient) -> condition == null
-                    ? new BlockStateFib(inputState, outputBlock.defaultBlockState(), lenient, modifiesDrops)
-                    : new BlockStateFib.Conditional(inputState, outputBlock.defaultBlockState(), lenient, modifiesDrops, condition);
+            this.constructor = (condition) -> condition == null
+                    ? new BlockFibImpl(inputState, outputBlock.defaultBlockState(), lenient, modifiesDrops)
+                    : new BlockFibImpl.Conditional(inputState, outputBlock.defaultBlockState(), lenient, modifiesDrops, condition);
         }
 
-        public Builder withCondition(Predicate<ServerPlayer> condition) {
+        public Builder withCondition(Predicate<Player> condition) {
             this.condition = condition;
             return this;
         }
@@ -116,7 +118,7 @@ public interface BlockFib {
         }
 
         public BlockFib build() {
-            return this.constructor.apply(this.condition, this.lenient);
+            return this.constructor.apply(this.condition);
         }
     }
 }

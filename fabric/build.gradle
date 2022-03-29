@@ -17,22 +17,25 @@ configurations {
 
 repositories {
     maven {
-        url 'https://maven.fabricmc.net/'
-        name 'Fabric'
+        name = 'JitPack'
+        url = 'https://jitpack.io'
+        content {
+            includeGroup "com.github"
+            includeGroupByRegex "com\\.github.*"
+        }
     }
 }
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}+${rootProject.minecraft_major_version}"
-    modApi "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
 
     modCompileOnly "com.github.CaffeineMC.lithium-fabric:lithium:mc${rootProject.minecraft_version}-${project.lithium_version}"
     modCompileOnly "com.github.CaffeineMC.lithium-fabric:lithium-api:mc${rootProject.minecraft_version}-${project.lithium_version}"
     modCompileOnly "com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v0.95-${rootProject.minecraft_major_version}"
     modCompileOnly("com.github.Virtuoel:Pehkui") {
         version {
-            strictly "fabric~1.16.4-SNAPSHOT"
+            strictly "fabric~1.14.4-1.x.x-SNAPSHOT"
         }
     }
 
