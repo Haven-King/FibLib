@@ -37,18 +37,21 @@ public class LookupImpl {
     /**
      * Returns the first fib applied to a given {@link BlockState} for the given player.
      *
-     * @param inputState     the state of the block we're inquiring about. Note that because this is passed to a BlockFib,
+     * @param blockState     the state of the block we're inquiring about. Note that because this is passed to a BlockFib,
      *                       other aspects of the state than the Block may be used in determining the output
      * @param player         the player who we will be fibbing to
      * @param includeLenient Whether to include lenient fibs in the search
      * @return the resulting fib.
      */
-    public static @Nullable BlockFib find(BlockState inputState, Player player, boolean includeLenient) {
-        for (BlockFib fib : BlockFibRegistry.getAllForState(inputState)) {
-            boolean maybeLenient = !fib.isLenient() || includeLenient;
-            BlockState newState = fib.getOutput(inputState, player);
+    public static @Nullable BlockFib find(BlockState blockState, Player player, boolean includeLenient) {
+        FibLib.debug("Getting replacement fib of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
 
-            if (maybeLenient && (newState != inputState)) {
+        for (BlockFib fib : BlockFibRegistry.getAllForState(blockState)) {
+            boolean maybeLenient = !fib.isLenient() || includeLenient;
+            BlockState newState = fib.getOutput(blockState, player);
+
+            if (maybeLenient && (newState != blockState)) {
+                FibLib.debug("Found replacement fib of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
                 return fib;
             }
         }
@@ -71,11 +74,11 @@ public class LookupImpl {
      * @return the resulting blockState.
      */
     public static BlockState findState(BlockState blockState, @Nullable Player player, boolean includeLenient, boolean cacheForLater) {
-        FibLib.debug("Getting replacement state for %s", blockState.getBlock().getName().getString());
-
         if (player == null) {
             return blockState;
         }
+
+        FibLib.debug("Getting replacement state of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
 
         @Nullable BlockFib fib = find(blockState, player, includeLenient);
 
@@ -84,16 +87,19 @@ public class LookupImpl {
         ImmutableTriple<BlockFib, BlockState, UUID> key = ImmutableTriple.of(fib, blockState, player.getUUID());
 
         if (lookupTable.containsKey(key)) {
+            FibLib.debug("Used cached replacement state of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
             return lookupTable.get(key);
         }
 
         BlockState newState = fib.getOutput(blockState, player);
+        FibLib.debug("Found new replacement state of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
+
         if (!cacheForLater) {
             return newState;
         }
 
         if (!lookupTable.containsKey(key)) {
-            FibLib.log("Saving replacement for %s for faster lookup", blockState.getBlock().getName().getString());
+            FibLib.log("Caching replacement state of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
 
             lookupTable.put(key, key.left.getOutput(blockState, player));
         }
@@ -118,15 +124,17 @@ public class LookupImpl {
      * @return the resulting blockState.
      */
     public static BlockState findDropsState(BlockState blockState, @Nullable Player player) {
-        FibLib.debug("Getting replacement for %s", blockState.getBlock().getName().getString());
-
         if (player == null) {
             return blockState;
         }
 
+        FibLib.debug("Getting replacement drops of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
+
         @Nullable BlockFib fib = find(blockState, player, false);
 
         if (fib == null || !fib.modifiesDrops()) return blockState;
+
+        FibLib.debug("Found replacement drops of %s for %s", blockState.getBlock().getName().getString(), player.getName().getString());
 
         return LookupImpl.findState(blockState, player, false, true);
     }
