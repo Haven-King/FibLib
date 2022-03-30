@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,23 +33,20 @@ public class LifecycleHooks {
     public static void handleTick(PlayerList playerList) {
         Iterator<Triple<BlockFib, BlockState, UUID>> it = LookupImpl.getAllKeys();
 
-        if (!it.hasNext()) {
-            FibLib.log("No players for handling server tick event");
-        }
-
         while (it.hasNext()) {
             Triple<BlockFib, BlockState, UUID> key = it.next();
-            ServerPlayer player = playerList.getPlayer(key.getRight());
-            FibLib.log("Handling server tick event for %s", player.getName().getString());
+            UUID playerId = key.getRight();
+            @Nullable ServerPlayer player = playerList.getPlayer(playerId);
 
-            if (player.removed || player.hasDisconnected()) {
-                FibLib.log("%s was removed from server", player.getName().getString());
+            if (player == null || player.removed || player.hasDisconnected()) {
+                FibLib.debug("%s was removed from server", player == null ? playerId : player.getName().getString());
                 it.remove();
             } else {
-                FibLib.log("Checking fib updates for %s", player.getName().getString());
+                FibLib.debug("Checking fib updates for %s", player.getName().getString());
                 BlockState newState = key.getLeft().getOutput(key.getMiddle(), player);
 
                 if (LookupImpl.upsertLookup(key, newState)) {
+                    FibLib.debug("Updated fib of %s for %s", newState.getBlock().getName().getString(), player.getName().getString());
                     updated.add(player);
                 }
             }
