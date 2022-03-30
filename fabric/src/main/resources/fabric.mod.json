@@ -16,6 +16,7 @@
   "entrypoints": {
   },
   "mixins": [
+    "fiblib-common.mixins.json",
     "fiblib.mixins.json"
   ],
   "depends": {

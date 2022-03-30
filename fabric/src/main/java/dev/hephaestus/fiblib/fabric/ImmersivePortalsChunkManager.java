@@ -3,7 +3,7 @@ package dev.hephaestus.fiblib.fabric;
 import com.qouteall.immersive_portals.Global;
 import com.qouteall.immersive_portals.chunk_loading.DimensionalChunkPos;
 import com.qouteall.immersive_portals.ducks.IEThreadedAnvilChunkStorage;
-import dev.hephaestus.fiblib.fabric.mixin.ChunkReloader;
+import dev.hephaestus.fiblib.mixin.ChunkReloader;
 import dev.hephaestus.fiblib.fabric.mixin.portals.CDSMAccessor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ChunkMap;

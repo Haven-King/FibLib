@@ -1,4 +1,4 @@
-package dev.hephaestus.fiblib.fabric.mixin;
+package dev.hephaestus.fiblib.mixin;
 
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerPlayer;

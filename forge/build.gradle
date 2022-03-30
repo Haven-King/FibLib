@@ -10,6 +10,12 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+loom {
+    forge {
+        mixinConfig "fiblib-common.mixins.json"
+    }
+}
+
 architectury {
     platformSetupLoomIde()
     forge()
