@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "entries": [
+    "fiblib:block_fib"
+  ]
+}

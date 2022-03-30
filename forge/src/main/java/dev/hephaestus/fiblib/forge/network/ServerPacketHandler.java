@@ -47,7 +47,7 @@ public class ServerPacketHandler {
     }
 
     public void sendReloadPacket(ServerPlayer player) {
-        FibLib.log("Sending ReloadPacket to %s", player.getName().getString());
+        FibLib.debug("Sending ReloadPacket to %s", player.getName().getString());
         channel.send(PacketDistributor.PLAYER.with(() -> player), new ReloadPacket());
     }
 }

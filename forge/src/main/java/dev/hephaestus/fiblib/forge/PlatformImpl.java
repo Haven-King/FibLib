@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class PlatformImpl extends Platform {
     public static void resendChunks(ServerPlayer player) {
-        // @TODO Y U NO SEND?!
         FibLib.log("Trigger reload chunk");
         ServerPacketHandler.getInstance().sendReloadPacket(player);
     }

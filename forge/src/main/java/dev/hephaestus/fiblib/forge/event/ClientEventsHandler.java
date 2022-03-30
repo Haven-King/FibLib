@@ -3,7 +3,7 @@ package dev.hephaestus.fiblib.forge.event;
 import dev.hephaestus.fiblib.FibLib;
 import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
-import dev.hephaestus.fiblib.forge.FibBakedModel;
+import dev.hephaestus.fiblib.forge.impl.FibBakedModel;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -38,9 +38,9 @@ public class ClientEventsHandler {
             BakedModel existingModel = modelRegistry.get(resourceLocation);
 
             if (existingModel == null) {
-                FibLib.log("No model found for %s", blockState.getBlock().getName().getString());
+                FibLib.debug("No model found for %s", blockState.getBlock().getName().getString());
             } else if (existingModel instanceof FibBakedModel) {
-                FibLib.log("Already replaced %s", blockState.getBlock().getName().getString());
+                FibLib.debug("Already replaced %s", blockState.getBlock().getName().getString());
                 return;
             }
             FibLib.log("Registering fib model for %s", blockState.getBlock().getName().getString());

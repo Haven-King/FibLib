@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class ClientPacketHandler {
     public static void handleReload(ReloadPacket msg) {
-        FibLib.log("Reloading client (%s)", msg.getCount());
+        FibLib.debug("Reloading client (%s)", msg.getCount());
         ForgeHooksClient.refreshResources(Minecraft.getInstance(), VanillaResourceType.MODELS);
     }
 
@@ -22,22 +22,22 @@ public class ClientPacketHandler {
         NetworkEvent.Context context = ctx.get();
         LogicalSide sideReceived = context.getDirection().getReceptionSide();
 
-        FibLib.log("Routing ReloadPacket destined for %s", sideReceived);
+        FibLib.debug("Routing ReloadPacket destined for %s", sideReceived);
 
         if (sideReceived != LogicalSide.CLIENT) {
-          FibLib.log("TargetEffectMessageToClient received on wrong side: %s", sideReceived);
+          FibLib.debug("ReloadPacket received on wrong side: %s", sideReceived);
           return;
         }
 
-        FibLib.log("ReloadPacket is correctly destined for %s", sideReceived);
+        FibLib.debug("ReloadPacket is correctly destined for %s", sideReceived);
 
         Optional<ClientLevel> clientWorld = LogicalSidedProvider.CLIENTWORLD.get(sideReceived);
         if (!clientWorld.isPresent()) {
-            FibLib.log("TargetEffectMessageToClient context could not provide a ClientWorld.");
+            FibLib.debug("ReloadPacket context could not provide a ClientWorld.");
             return;
         }
 
-        FibLib.log("Enqueueing ReloadPacket handler");
+        FibLib.debug("Enqueueing ReloadPacket handler");
         context.enqueueWork(() -> handleReload(msg));
         context.setPacketHandled(true);
     }

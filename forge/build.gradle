@@ -2,11 +2,6 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
-architectury {
-    platformSetupLoomIde()
-    forge()
-}
-
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -15,13 +10,18 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
     common(project(path: ":common", configuration: "dev")) {
         transitive = false
     }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
         transitive = false
     }
 }

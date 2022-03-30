@@ -1,8 +1,9 @@
-package dev.hephaestus.fiblib.forge;
+package dev.hephaestus.fiblib.forge.impl;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import dev.hephaestus.fiblib.api.BlockFib;
+import dev.hephaestus.fiblib.impl.LookupImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -43,9 +44,7 @@ public class FibBakedModel implements BakedModel {
 
         BlockState givenState = passedState == null || passedState == originalState ? originalState : passedState;
 
-        BlockState actualState = blockFib.getOutput(givenState, player);
-
-        return actualState == null ? givenState : actualState;
+        return LookupImpl.findState(givenState, player);
     }
 
     private BakedModel getFibModel() {

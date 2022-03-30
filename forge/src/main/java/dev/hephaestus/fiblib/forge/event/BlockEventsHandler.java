@@ -66,6 +66,4 @@ public class BlockEventsHandler {
             event.setCanHarvest(newState.canHarvestBlock(player.getCommandSenderWorld(), new BlockPos(0, -1, 0), player));
         }
     }
-
-    // @TODO: Change drops
 }

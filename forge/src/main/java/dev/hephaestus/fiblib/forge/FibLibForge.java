@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(FibLib.MOD_ID)
 public class FibLibForge {
     public FibLibForge() {
-        FibLib.log("Loaded");
+        FibLib.debug("Loaded");
         LifecycleHooks.handleInit();
     }
 }
