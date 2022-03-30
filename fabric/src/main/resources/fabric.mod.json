@@ -11,7 +11,7 @@
     "homepage": "https://hephaestus.dev/"
   },
   "license": "MIT",
-  "icon": "assets.fiblib/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
   },
@@ -24,6 +24,8 @@
     "minecraft": ">=1.16.2"
   },
   "custom": {
-    "modmenu:api": true
+    "modmenu": {
+      "badges": ["library"]
+    }
   }
 }

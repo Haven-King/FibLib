@@ -11,18 +11,11 @@ authors = "Haven King"
 description = '''
 This is a server-side library for spoofing data to clients.
 '''
-logoFile = "assets.fiblib/icon.png"
+logoFile = "icon.png"
 
 [[dependencies.fiblib]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.16.5,)"
 ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.fiblib]]
-modId = "architectury"
-mandatory = true
-versionRange = "[1.1.55,)"
-ordering = "AFTER"
 side = "BOTH"

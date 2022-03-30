@@ -24,6 +24,7 @@ public class BlockEventsHandler {
         FibLib.debug("Intercepting RightClick");
         Player player = event.getPlayer();
         BlockState target = event.getWorld().getBlockState(event.getPos());
+        // @TODO: Lenient blocks are not revealed here
         BlockState newState = LookupImpl.findState(target, player, false);
         if (newState != target) {
             InteractionResult result = newState.use(player.getCommandSenderWorld(), player, event.getHand(), event.getHitVec());
@@ -36,6 +37,7 @@ public class BlockEventsHandler {
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         FibLib.debug("Intercepting BreakSpeed");
         Player player = event.getPlayer();
+        // @TODO: Lenient blocks are not revealed here
         BlockState newState = LookupImpl.findState(event.getState(), player, false);
         if (newState != event.getState()) {
             event.setNewSpeed(ForgeEventFactory.getBreakSpeed(event.getPlayer(), newState, event.getOriginalSpeed(), event.getPos()));
@@ -47,6 +49,7 @@ public class BlockEventsHandler {
     public static void onBreakBlock(BlockEvent.BreakEvent event) {
         FibLib.debug("Intercepting BreakBlock");
         Player player = event.getPlayer();
+        // @TODO: Lenient blocks are not revealed here
         BlockState newState = LookupImpl.findState(event.getState(), player, false);
         if (newState != event.getState()) {
             int bonusLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, player.getMainHandItem());
@@ -61,6 +64,7 @@ public class BlockEventsHandler {
     public static void onHarvestCheck(PlayerEvent.HarvestCheck event) {
         FibLib.debug("Intercepting HarvestCheck");
         Player player = event.getPlayer();
+        // @TODO: Lenient blocks are not revealed here
         BlockState newState = LookupImpl.findState(event.getTargetBlock(), player, false);
         if (newState != event.getTargetBlock()) {
             event.setCanHarvest(newState.canHarvestBlock(player.getCommandSenderWorld(), new BlockPos(0, -1, 0), player));

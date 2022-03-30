@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "dev.hephaestus.fiblib.fabric.mixin.VolatileMixinPlugin",
   "mixins": [
-    "dev.hephaestus.fiblib.mixin.ChunkReloader",
     "MixinChunkMap",
     "MixinMinecraftServer",
     "MixinServerGamePacketListener",
