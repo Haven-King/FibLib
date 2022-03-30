@@ -27,7 +27,6 @@ public class LifecycleHooks {
     public static void handleInit() {
         FibLib.log("Initializing FibLib");
         BlockFibRegistry.resetDynamicFibs();
-        addTestFibs();
     }
 
     public static void handleTick(PlayerList playerList) {
