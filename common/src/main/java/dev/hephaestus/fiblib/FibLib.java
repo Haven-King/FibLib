@@ -1,5 +1,6 @@
 package dev.hephaestus.fiblib;
 
+import dev.architectury.injectables.targets.ArchitecturyTarget;
 import dev.hephaestus.fiblib.api.BlockFib;
 import dev.hephaestus.fiblib.api.BlockFibRegistry;
 import net.minecraft.core.Registry;
@@ -25,7 +26,7 @@ public class FibLib {
     }
 
     public static void log(String format, Object... args) {
-        LOGGER.info(String.format("[%s] %s", MOD_NAME, String.format(format, args)));
+        LOGGER.info(String.format("[%s-%s] %s", MOD_NAME, ArchitecturyTarget.getCurrentTarget(), String.format(format, args)));
     }
 
     public static void debug(String msg) {
@@ -33,7 +34,7 @@ public class FibLib {
     }
 
     public static void debug(String format, Object... args) {
-        if (DEBUG) LOGGER.info(String.format("[%s] %s", MOD_NAME, String.format(format, args)));
+        if (DEBUG) LOGGER.info(String.format("[%s-%s] %s", MOD_NAME, ArchitecturyTarget.getCurrentTarget(), String.format(format, args)));
     }
 
     public static void fibIronOre() {
