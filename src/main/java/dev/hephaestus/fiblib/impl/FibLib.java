@@ -42,13 +42,13 @@ public class FibLib {
 	}
 
 	public static void resendChunks(ServerPlayerEntity player) {
-		ThreadedAnvilChunkStorage TACS = ((TACSAccessor) player.getServerWorld().getChunkManager())
+		ThreadedAnvilChunkStorage TACS = ((TACSAccessor) player.getWorld().getChunkManager())
 				.getThreadedAnvilChunkStorage();
 
 
 		if (FabricLoader.getInstance().isModLoaded("immersive_portals")) {
 			CDSMAccessor cdsm = (CDSMAccessor) IPGlobal.chunkDataSyncManager;
-			World world = player.getServerWorld();
+			World world = player.getWorld();
 
 			if (world != null) {
 				RegistryKey<World> worldRegistryKey = world.getRegistryKey();
