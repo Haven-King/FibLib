@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'fabric-loom' version '0.11-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -37,7 +37,7 @@ dependencies {
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
 	modCompileOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modRuntime "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modCompileOnly "maven.modrinth:lithium:mc1.18.1-0.7.7"
 	modCompileOnly "com.github.qouteall:ImmersivePortalsMod:v0.07-1.17"
 }
