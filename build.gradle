@@ -44,6 +44,7 @@ dependencies {
 
 processResources {
 	inputs.property "version", project.version
+	filteringCharset "UTF-8"
 
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
@@ -65,27 +66,32 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
 jar {
-	from "LICENSE"
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}" }
+	}
 }
 
 // configure the maven publication
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+			from components.java
 		}
 	}
+
 	repositories {
 		maven {
-			url 's3://hephaestus.dev/release'
+			name = "draylarRepository"
+			url = "https://maven.draylar.dev/releases"
+			credentials(PasswordCredentials)
 			authentication {
-				awsIm(AwsImAuthentication)
+				basic(BasicAuthentication)
 			}
 		}
 	}
